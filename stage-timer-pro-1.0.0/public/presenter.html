@@ -15,6 +15,14 @@
             --danger: #ef4444;
         }
 
+        /* Fallback rules deleted since we overwrite them dynamically inline now, but keeping original classes just in case */
+        :root {
+            --bg: #000000;
+            --text: #22c55e;
+            --warn: #f97316;
+            --danger: #ef4444;
+        }
+
         *, html, body { cursor: none !important; user-select: none; }
 
         body { 
@@ -109,6 +117,29 @@
         socket.on('stateUpdate', (state) => {
             currentMode = state.mode;
 
+            // Dynamic Styles
+            document.documentElement.style.setProperty('--bg', state.bgColor || '#000000');
+            document.documentElement.style.setProperty('--text', state.textColor || '#22c55e');
+            document.documentElement.style.setProperty('--warn', state.warnColor || '#f97316');
+            document.documentElement.style.setProperty('--danger', state.dangerColor || '#ef4444');
+
+            document.body.style.backgroundColor = 'var(--bg)';
+            document.body.style.color = 'var(--text)';
+
+            clock.style.fontFamily = state.fontFamily || "'JetBrains Mono', monospace";
+
+            const scale = (state.clockScale || 100) / 100;
+            const offsetX = state.clockOffsetX || 0;
+            const offsetY = state.clockOffsetY || 0;
+            document.getElementById('clock-container').style.transform = `translate(${offsetX}vw, ${offsetY}vh) scale(${scale})`;
+
+            // Re-apply blink colors logic just in case it's blinking
+            if (state.mode === 'countdown' && state.timeLeft <= 0 && state.blink_state) {
+                document.body.style.backgroundColor = 'var(--text)'; // Basic inverse blink
+                document.body.style.color = 'var(--bg)';
+            }
+
+
             if (state.ip && !ipOverlay.dataset.hidden) {
                 ipOverlay.innerText = "IP: " + state.ip;
                 setTimeout(() => { ipOverlay.style.display = 'none'; ipOverlay.dataset.hidden = 'true'; }, 15000);
@@ -122,11 +153,19 @@
                 if (!localTimeInterval) {
                     localTimeInterval = setInterval(() => {
                         if(currentMode === 'timeofday') {
-                            clock.innerText = new Date().toLocaleTimeString('en-US', { hour12: false });
+
+                            const opts = { hour12: false, hour: '2-digit', minute: '2-digit' };
+                            if (state.showSeconds !== false) opts.second = '2-digit';
+                            clock.innerText = new Date().toLocaleTimeString('en-US', opts);
+
                             clock.style.fontSize = (84 / (8 * 0.6)) + "vw";
                         }
                     }, 1000);
-                    clock.innerText = new Date().toLocaleTimeString('en-US', { hour12: false });
+
+                            const opts = { hour12: false, hour: '2-digit', minute: '2-digit' };
+                            if (state.showSeconds !== false) opts.second = '2-digit';
+                            clock.innerText = new Date().toLocaleTimeString('en-US', opts);
+
                     clock.style.fontSize = (84 / (8 * 0.6)) + "vw";
                 }
                 document.getElementById('progress-container').style.display = 'none';
@@ -155,7 +194,10 @@
                 const absTime = Math.abs(state.timeLeft);
                 const mins = Math.floor(absTime / 60);
                 const secs = absTime % 60;
-                const timeStr = `${state.timeLeft < 0 ? '-' : ''}${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+
+                let timeStr = `${state.timeLeft < 0 ? '-' : ''}${mins.toString().padStart(2, '0')}`;
+                if (state.showSeconds !== false) timeStr += `:${secs.toString().padStart(2, '0')}`;
+
                 clock.innerText = timeStr;
                 clock.style.opacity = "1";
 
@@ -165,8 +207,13 @@
                 clock.style.fontSize = fontSizeVw + "vw";
 
                 if (state.mode === 'countdown') {
-                    if (state.timeLeft <= 0) document.body.classList.add('state-danger');
-                    else if (state.timeLeft <= 120) document.body.classList.add('state-warn');
+                    if (state.timeLeft <= (state.dangerThreshold || 0)) {
+                        document.body.classList.add('state-danger');
+                        document.body.style.backgroundColor = 'var(--danger)';
+                    } else if (state.timeLeft <= (state.warnThreshold || 120)) {
+                        document.body.classList.add('state-warn');
+                        document.body.style.backgroundColor = 'var(--warn)';
+                    }
                 }
 
                 if (state.mode === 'countdown') {
