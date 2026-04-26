@@ -117,6 +117,9 @@
 
             <div class="sys-group" id="display-config-panel">
                 <h3 data-i18n="display_config">Display Configuration</h3>
+                <div class="config-row" style="justify-content: flex-end;">
+                    <button onclick="resetDefaults()" class="sys-btn sys-btn-danger" style="padding: 5px 10px; font-size: 10px;" data-i18n="reset_defaults">Reset to Defaults</button>
+                </div>
                 <div class="config-row">
                     <span class="config-label" data-i18n="language">Language / Langue</span>
                     <select id="cfg-language" class="config-input" onchange="updateConfig()">
@@ -180,58 +183,62 @@
                     <span class="config-label" data-i18n="show_seconds">Show Seconds</span>
                     <input type="checkbox" id="cfg-showSeconds" onchange="updateConfig()">
                 </div>
+                <div class="config-row">
+                    <span class="config-label" data-i18n="show_progress">Show Progress Bar</span>
+                    <input type="checkbox" id="cfg-showProgressBar" onchange="updateConfig()">
+                </div>
             </div>
 
             <div class="sys-group">
-                <h3>Wi-Fi Connection</h3>
+                <h3 data-i18n="wifi_conn">Wi-Fi Connection</h3>
                 <div class="sys-row">
-                    <button onclick="scanWifi()" class="sys-btn" style="width: 100%;">SCAN NETWORKS</button>
+                    <button onclick="scanWifi()" class="sys-btn" style="width: 100%;" data-i18n="scan_net">SCAN NETWORKS</button>
                 </div>
                 <div class="sys-row hidden" id="wifi-select-row">
                     <select id="wifi-ssid" class="sys-input" onchange="toggleWifiPass()"></select>
                 </div>
                 <div class="sys-row hidden" id="wifi-pass-row">
-                    <input type="password" id="wifi-pass" class="sys-input" placeholder="Password (if needed)">
-                    <button onclick="connectWifi()" class="sys-btn">CONNECT</button>
+                    <input type="password" id="wifi-pass" class="sys-input" placeholder="Password (if needed)" data-i18n="wifi_pass">
+                    <button onclick="connectWifi()" class="sys-btn" data-i18n="connect">CONNECT</button>
                 </div>
                 <p id="wifi-status" style="font-size: 11px; color: var(--green); margin:0;"></p>
             </div>
 
             <div class="sys-group">
-                <h3>Static IP (For Current Wi-Fi)</h3>
+                <h3 data-i18n="static_ip">Static IP (For Current Wi-Fi)</h3>
                 <p id="current-ip-info" style="font-size: 11px; color: var(--text-dim); margin-top: -10px; margin-bottom: 10px;">Current Netmask: Loading...</p>
                 <div class="sys-row">
-                    <input type="text" id="static-ip" class="sys-input" placeholder="IP (192.168.1.50)">
+                    <input type="text" id="static-ip" class="sys-input" placeholder="IP (192.168.1.50)" data-i18n="ip_addr">
                     <input type="text" id="static-mask" class="sys-input" placeholder="Mask (e.g. 24)" style="flex: none; width: 100px;">
                 </div>
                 <div class="sys-row">
-                    <input type="text" id="static-gw" class="sys-input" placeholder="Gateway (192.168.1.1)">
+                    <input type="text" id="static-gw" class="sys-input" placeholder="Gateway (192.168.1.1)" data-i18n="gateway">
                 </div>
                 <div class="sys-row">
-                    <button onclick="setStaticIP()" class="sys-btn" style="flex:1;">APPLY STATIC</button>
-                    <button onclick="setAutoIP()" class="sys-btn sys-btn-warn" style="flex:1;">REVERT TO DHCP</button>
+                    <button onclick="setStaticIP()" class="sys-btn" style="flex:1;" data-i18n="apply_static">APPLY STATIC</button>
+                    <button onclick="setAutoIP()" class="sys-btn sys-btn-warn" style="flex:1;" data-i18n="revert_dhcp">REVERT TO DHCP</button>
                 </div>
             </div>
 
             <div class="sys-group">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <h3 style="margin: 0;">Access Point (Fallback)</h3>
+                    <h3 style="margin: 0;" data-i18n="ap_fallback">Access Point (Fallback)</h3>
                     <span id="ap-status-badge" class="msg-status-badge status-off" style="float: none; position: static;">CHECKING...</span>
                 </div>
                 <div class="sys-row">
-                    <button onclick="toggleAP('on')" class="sys-btn" style="flex:1; background: var(--green);">TURN ON AP</button>
-                    <button onclick="toggleAP('down')" class="sys-btn sys-btn-danger" style="flex:1;">TURN OFF AP</button>
+                    <button onclick="toggleAP('on')" class="sys-btn" style="flex:1; background: var(--green);" data-i18n="ap_on">TURN ON AP</button>
+                    <button onclick="toggleAP('down')" class="sys-btn sys-btn-danger" style="flex:1;" data-i18n="ap_off">TURN OFF AP</button>
                 </div>
             </div>
 
             <div class="sys-group">
-                <h3>System Management</h3>
+                <h3 data-i18n="sys_mgmt">System Management</h3>
                 <div class="sys-row">
-                    <input type="text" id="sys-hostname" class="sys-input" placeholder="New Hostname">
-                    <button onclick="setHostname()" class="sys-btn">SET</button>
+                    <input type="text" id="sys-hostname" class="sys-input" placeholder="New Hostname" data-i18n="new_host">
+                    <button onclick="setHostname()" class="sys-btn" data-i18n="set_btn">SET</button>
                 </div>
                 <div class="sys-row" style="margin-top: 15px;">
-                    <button onclick="updateFirmware()" class="sys-btn sys-btn-warn" style="flex: 1;">PULL FIRMWARE UPDATE (GIT)</button>
+                    <button onclick="updateFirmware()" class="sys-btn sys-btn-warn" style="flex: 1;" data-i18n="update_firmware">PULL FIRMWARE UPDATE (GIT)</button>
                 </div>
             </div>
         </div>
@@ -242,8 +249,8 @@
             <h3 style="color: var(--red); margin-top:0;">SYSTEM RESTART</h3>
             <p style="color: var(--text-dim); margin-bottom: 25px;">Are you sure you want to restart the Stage Timer service?</p>
             <div class="btn-grid">
-                <button onclick="document.getElementById('restart-modal').classList.remove('active')" class="btn btn-dim" style="padding: 15px;">CANCEL</button>
-                <button onclick="confirmRestart()" class="btn btn-toggle-on" style="padding: 15px; flex-direction: row;">RESTART</button>
+                <button onclick="document.getElementById('restart-modal').classList.remove('active')" class="btn btn-dim" style="padding: 15px;" data-i18n="cancel">CANCEL</button>
+                <button onclick="confirmRestart()" class="btn btn-toggle-on" style="padding: 15px; flex-direction: row;" data-i18n="restart">RESTART</button>
             </div>
         </div>
     </div>
@@ -296,7 +303,7 @@
                         <button onclick="api('reset',3600)" class="btn-preset">60m</button>
                     </div>
                     <div class="custom-time-row">
-                        <input type="number" id="custom-min" placeholder="Set Minutes..." class="input-compact">
+                        <input type="number" id="custom-min" placeholder="Set Minutes..." data-i18n="set_mins" class="input-compact">
                         <button onclick="setCustomTime()" class="btn-set">SET TIME</button>
                     </div>
                 </section>
@@ -339,7 +346,7 @@
 
                 <section class="card" style="margin-bottom: 20px;">
                     <h2 data-i18n="msg_control">Messaging Control</h2>
-                    <input type="text" id="minput" placeholder="Enter custom message..." class="msg-input" oninput="updateMsgText()">
+                    <input type="text" id="minput" placeholder="Enter custom message..." data-i18n="enter_msg" class="msg-input" oninput="updateMsgText()">
                     <button id="btn-toggle" onclick="api('message/toggle')" class="btn btn-toggle btn-toggle-off" style="margin-bottom: 20px;">SHOW MESSAGE</button>
                     
                     <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 15px; margin-top: 10px;">
@@ -411,7 +418,7 @@
                 clock_scale: "Clock Scale (%)",
                 clock_offset_x: "Clock Offset X (%)",
                 clock_offset_y: "Clock Offset Y (%)",
-                show_seconds: "Show Seconds", language: "Language", progress_color: "Progress Bar Color"
+                show_seconds: "Show Seconds", language: "Language", progress_color: "Progress Bar Color", wifi_conn: "Wi-Fi Connection", scan_net: "SCAN NETWORKS", wifi_pass: "Password (if needed)", connect: "CONNECT", static_ip: "Static IP (For Current Wi-Fi)", ip_addr: "IP (192.168.1.50)", gateway: "Gateway (192.168.1.1)", apply_static: "APPLY STATIC", revert_dhcp: "REVERT TO DHCP", ap_fallback: "Access Point (Fallback)", ap_on: "TURN ON AP", ap_off: "TURN OFF AP", sys_mgmt: "System Management", new_host: "New Hostname", set_btn: "SET", update_firmware: "PULL FIRMWARE UPDATE (GIT)", cancel: "CANCEL", set_mins: "Set Minutes...", enter_msg: "Enter custom message...", reset_defaults: "Reset to Defaults", show_progress: "Show Progress Bar"
             },
             fr: {
                 moderator: "Modérateur",
@@ -455,7 +462,7 @@
                 clock_scale: "Taille de l'Horloge (%)",
                 clock_offset_x: "Décalage Horloge X (%)",
                 clock_offset_y: "Décalage Horloge Y (%)",
-                show_seconds: "Afficher Secondes", language: "Langue", progress_color: "Couleur de la barre de progression"
+                show_seconds: "Afficher Secondes", language: "Langue", progress_color: "Couleur de la barre de progression", wifi_conn: "Connexion Wi-Fi", scan_net: "SCANNER RÉSEAUX", wifi_pass: "Mot de passe", connect: "CONNECTER", static_ip: "IP Statique", ip_addr: "IP (192.168.1.50)", gateway: "Passerelle (192.168.1.1)", apply_static: "APPLIQUER STATIQUE", revert_dhcp: "RETOURNER AU DHCP", ap_fallback: "Point d'Accès (Secours)", ap_on: "ACTIVER PA", ap_off: "DÉSACTIVER PA", sys_mgmt: "Gestion Système", new_host: "Nouveau Nom d'hôte", set_btn: "DÉFINIR", update_firmware: "METTRE À JOUR LE SYSTÈME (GIT)", cancel: "ANNULER", set_mins: "Minutes...", enter_msg: "Message personnalisé...", reset_defaults: "Réinitialiser", show_progress: "Afficher barre de progression"
             }
         };
 
@@ -466,7 +473,7 @@
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 if (i18n[currentLang][key]) {
-                    if (el.tagName === 'INPUT' && el.type === 'text') el.placeholder = i18n[currentLang][key];
+                    if (el.tagName === 'INPUT' && (el.type === 'text' || el.type === 'password' || el.type === 'number')) el.placeholder = i18n[currentLang][key];
                     else el.innerText = i18n[currentLang][key];
                 }
             });
@@ -503,6 +510,7 @@
                 clockOffsetX: document.getElementById('cfg-clockOffsetX').value,
                 clockOffsetY: document.getElementById('cfg-clockOffsetY').value,
                 showSeconds: document.getElementById('cfg-showSeconds').checked,
+                showProgressBar: document.getElementById('cfg-showProgressBar').checked,
                 progressColor: document.getElementById('cfg-progressColor').value,
                 language: document.getElementById('cfg-language').value
             };
@@ -516,6 +524,25 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(config)
             });
+        }
+
+        function resetDefaults() {
+            if(confirm("Are you sure you want to reset display configuration to default?")) {
+                document.getElementById('cfg-textColor').value = '#22c55e';
+                document.getElementById('cfg-bgColor').value = '#000000';
+                document.getElementById('cfg-warnColor').value = '#f97316';
+                document.getElementById('cfg-dangerColor').value = '#ef4444';
+                document.getElementById('cfg-progressColor').value = '#22c55e';
+                document.getElementById('cfg-warnThreshold').value = 120;
+                document.getElementById('cfg-dangerThreshold').value = 0;
+                document.getElementById('cfg-fontFamily').value = 'JetBrains Mono';
+                document.getElementById('cfg-clockScale').value = 100;
+                document.getElementById('cfg-clockOffsetX').value = 0;
+                document.getElementById('cfg-clockOffsetY').value = 0;
+                document.getElementById('cfg-showSeconds').checked = true;
+                if(document.getElementById('cfg-showProgressBar')) document.getElementById('cfg-showProgressBar').checked = true;
+                updateConfig();
+            }
         }
 
         let lastState = null;
@@ -701,9 +728,20 @@
                 
                 if (s.mode === 'timeofday') { 
 
+
+                    if (!window.modTimeInterval) {
+                        window.modTimeInterval = setInterval(() => {
+                            if (lastState && lastState.mode === 'timeofday') {
+                                const opts = {hour12: false, hour:'2-digit', minute:'2-digit'};
+                                if (lastState.showSeconds) opts.second = '2-digit';
+                                document.getElementById('m-time').innerText = new Date().toLocaleTimeString('en-US', opts);
+                            }
+                        }, 1000);
+                    }
                     const opts = {hour12: false, hour:'2-digit', minute:'2-digit'};
                     if (s.showSeconds) opts.second = '2-digit';
                     monitorTime.innerText = new Date().toLocaleTimeString('en-US', opts);
+
 
                     monitorTime.style.color = '#22c55e';
                 } else {
@@ -714,7 +752,18 @@
                     monitorTime.innerText = formattedTime;
 
 
-            if (!lastState || JSON.stringify(lastState) !== JSON.stringify(s)) {
+
+            // Check if config specifically changed, ignore timeLeft ticks
+            const configChanged = !lastState ||
+                lastState.textColor !== s.textColor || lastState.bgColor !== s.bgColor ||
+                lastState.warnColor !== s.warnColor || lastState.dangerColor !== s.dangerColor ||
+                lastState.warnThreshold !== s.warnThreshold || lastState.dangerThreshold !== s.dangerThreshold ||
+                lastState.fontFamily !== s.fontFamily || lastState.clockScale !== s.clockScale ||
+                lastState.clockOffsetX !== s.clockOffsetX || lastState.clockOffsetY !== s.clockOffsetY ||
+                lastState.showSeconds !== s.showSeconds || lastState.showProgressBar !== s.showProgressBar ||
+                lastState.language !== s.language;
+
+            if (configChanged) {
                 // Update inputs only if value changed to avoid fighting user input
                 if (document.getElementById('cfg-textColor').value !== s.textColor) document.getElementById('cfg-textColor').value = s.textColor || '#22c55e';
                 if (document.getElementById('cfg-bgColor').value !== s.bgColor) document.getElementById('cfg-bgColor').value = s.bgColor || '#000000';
@@ -729,6 +778,7 @@
                 if (document.getElementById('cfg-clockOffsetX').value != s.clockOffsetX) document.getElementById('cfg-clockOffsetX').value = s.clockOffsetX || 0;
                 if (document.getElementById('cfg-clockOffsetY').value != s.clockOffsetY) document.getElementById('cfg-clockOffsetY').value = s.clockOffsetY || 0;
                 document.getElementById('cfg-showSeconds').checked = s.showSeconds !== false;
+                if(document.getElementById('cfg-showProgressBar')) document.getElementById('cfg-showProgressBar').checked = s.showProgressBar !== false;
 
                 document.getElementById('cfg-clockScale-val').innerText = s.clockScale || 100;
                 document.getElementById('cfg-clockOffsetX-val').innerText = s.clockOffsetX || 0;

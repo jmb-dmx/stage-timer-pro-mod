@@ -94,6 +94,7 @@ let state = {
     clockOffsetY: 0,
     clockScale: 100,
     showSeconds: true,
+    showProgressBar: true,
     language: 'en'
 };
 
@@ -117,6 +118,7 @@ try {
             clockOffsetY: state.clockOffsetY,
             clockScale: state.clockScale,
             showSeconds: state.showSeconds,
+            showProgressBar: state.showProgressBar,
             language: state.language
         }));
     }
@@ -139,6 +141,7 @@ function saveConfig() {
             clockOffsetY: state.clockOffsetY,
             clockScale: state.clockScale,
             showSeconds: state.showSeconds,
+            showProgressBar: state.showProgressBar,
             language: state.language
         }));
     } catch (e) {
@@ -253,6 +256,7 @@ app.post('/api/config/update', (req, res) => {
         if (newConfig.clockOffsetY !== undefined) state.clockOffsetY = parseInt(newConfig.clockOffsetY);
         if (newConfig.clockScale !== undefined) state.clockScale = parseInt(newConfig.clockScale);
         if (newConfig.showSeconds !== undefined) state.showSeconds = newConfig.showSeconds === true || newConfig.showSeconds === 'true';
+        if (newConfig.showProgressBar !== undefined) state.showProgressBar = newConfig.showProgressBar === true || newConfig.showProgressBar === 'true';
         if (newConfig.language !== undefined) state.language = newConfig.language;
 
         saveConfig();

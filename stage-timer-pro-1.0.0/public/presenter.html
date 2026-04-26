@@ -190,7 +190,7 @@
             } else {
                 logoDisplay.style.display = 'none';
                 document.getElementById('clock-container').style.display = 'flex';
-                document.getElementById('progress-container').style.display = 'block';
+                document.getElementById('progress-container').style.display = state.showProgressBar === false ? 'none' : 'block';
                 const absTime = Math.abs(state.timeLeft);
                 const mins = Math.floor(absTime / 60);
                 const secs = absTime % 60;
