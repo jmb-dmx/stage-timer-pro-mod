@@ -116,6 +116,31 @@
 
         socket.on('stateUpdate', (state) => {
             currentMode = state.mode;
+            window.showSecondsState = state.showSeconds;
+
+            // Dynamic Styles
+            document.documentElement.style.setProperty('--bg', state.bgColor || '#000000');
+            document.documentElement.style.setProperty('--text', state.textColor || '#22c55e');
+            document.documentElement.style.setProperty('--warn', state.warnColor || '#f97316');
+            document.documentElement.style.setProperty('--danger', state.dangerColor || '#ef4444');
+            document.documentElement.style.setProperty('--progress', state.progressColor || '#22c55e');
+
+            document.body.style.backgroundColor = 'var(--bg)';
+            document.body.style.color = 'var(--text)';
+
+            clock.style.fontFamily = state.fontFamily || "'JetBrains Mono', monospace";
+
+            const scale = (state.clockScale || 100) / 100;
+            const offsetX = state.clockOffsetX || 0;
+            const offsetY = state.clockOffsetY || 0;
+            document.getElementById('clock-container').style.transform = `translate(${offsetX}vw, ${offsetY}vh) scale(${scale})`;
+
+            // Re-apply blink colors logic just in case it's blinking
+            if (state.mode === 'countdown' && state.timeLeft <= 0 && state.blink_state) {
+                document.body.style.backgroundColor = 'var(--text)'; // Basic inverse blink
+                document.body.style.color = 'var(--bg)';
+            }
+
 
             // Dynamic Styles
             document.documentElement.style.setProperty('--bg', state.bgColor || '#000000');
@@ -219,8 +244,7 @@
                 if (state.mode === 'countdown') {
                     const progress = state.timeLeft <= 0 ? 0 : (state.timeLeft / state.initialTime) * 100;
                     progressBar.style.width = `${progress}%`;
-                    const hue = Math.max(0, (progress / 100) * 120);
-                    progressBar.style.backgroundColor = `hsl(${hue}, 80%, 50%)`;
+                    progressBar.style.backgroundColor = 'var(--progress)';
                 } else {
                     progressBar.style.width = '100%';
                     progressBar.style.backgroundColor = 'var(--text)';

@@ -88,6 +88,7 @@ let state = {
     warnColor: '#f97316',
     dangerThreshold: 0,
     dangerColor: '#ef4444',
+    progressColor: '#22c55e',
     fontFamily: 'JetBrains Mono',
     clockOffsetX: 0,
     clockOffsetY: 0,
@@ -109,6 +110,8 @@ try {
             warnColor: state.warnColor,
             dangerThreshold: state.dangerThreshold,
             dangerColor: state.dangerColor,
+            progressColor: state.progressColor,
+            progressColor: state.progressColor,
             fontFamily: state.fontFamily,
             clockOffsetX: state.clockOffsetX,
             clockOffsetY: state.clockOffsetY,
@@ -130,6 +133,7 @@ function saveConfig() {
             warnColor: state.warnColor,
             dangerThreshold: state.dangerThreshold,
             dangerColor: state.dangerColor,
+            progressColor: state.progressColor,
             fontFamily: state.fontFamily,
             clockOffsetX: state.clockOffsetX,
             clockOffsetY: state.clockOffsetY,
@@ -243,6 +247,7 @@ app.post('/api/config/update', (req, res) => {
         if (newConfig.warnColor !== undefined) state.warnColor = newConfig.warnColor;
         if (newConfig.dangerThreshold !== undefined) state.dangerThreshold = parseInt(newConfig.dangerThreshold);
         if (newConfig.dangerColor !== undefined) state.dangerColor = newConfig.dangerColor;
+        if (newConfig.progressColor !== undefined) state.progressColor = newConfig.progressColor;
         if (newConfig.fontFamily !== undefined) state.fontFamily = newConfig.fontFamily;
         if (newConfig.clockOffsetX !== undefined) state.clockOffsetX = parseInt(newConfig.clockOffsetX);
         if (newConfig.clockOffsetY !== undefined) state.clockOffsetY = parseInt(newConfig.clockOffsetY);

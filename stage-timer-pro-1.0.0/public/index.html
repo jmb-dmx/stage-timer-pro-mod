@@ -118,6 +118,17 @@
             <div class="sys-group" id="display-config-panel">
                 <h3 data-i18n="display_config">Display Configuration</h3>
                 <div class="config-row">
+                    <span class="config-label" data-i18n="language">Language / Langue</span>
+                    <select id="cfg-language" class="config-input" onchange="updateConfig()">
+                        <option value="en">English</option>
+                        <option value="fr">Français</option>
+                    </select>
+                </div>
+                <div class="config-row">
+                    <span class="config-label" data-i18n="progress_color">Progress Bar Color</span>
+                    <input type="color" id="cfg-progressColor" class="config-input" onchange="updateConfig()">
+                </div>
+                <div class="config-row">
                     <span class="config-label" data-i18n="text_color">Text Color</span>
                     <input type="color" id="cfg-textColor" class="config-input" onchange="updateConfig()">
                 </div>
@@ -400,7 +411,7 @@
                 clock_scale: "Clock Scale (%)",
                 clock_offset_x: "Clock Offset X (%)",
                 clock_offset_y: "Clock Offset Y (%)",
-                show_seconds: "Show Seconds"
+                show_seconds: "Show Seconds", language: "Language", progress_color: "Progress Bar Color"
             },
             fr: {
                 moderator: "Modérateur",
@@ -444,7 +455,7 @@
                 clock_scale: "Taille de l'Horloge (%)",
                 clock_offset_x: "Décalage Horloge X (%)",
                 clock_offset_y: "Décalage Horloge Y (%)",
-                show_seconds: "Afficher Secondes"
+                show_seconds: "Afficher Secondes", language: "Langue", progress_color: "Couleur de la barre de progression"
             }
         };
 
@@ -492,7 +503,8 @@
                 clockOffsetX: document.getElementById('cfg-clockOffsetX').value,
                 clockOffsetY: document.getElementById('cfg-clockOffsetY').value,
                 showSeconds: document.getElementById('cfg-showSeconds').checked,
-                language: currentLang
+                progressColor: document.getElementById('cfg-progressColor').value,
+                language: document.getElementById('cfg-language').value
             };
 
             document.getElementById('cfg-clockScale-val').innerText = config.clockScale;
@@ -711,6 +723,8 @@
                 if (document.getElementById('cfg-warnThreshold').value != s.warnThreshold) document.getElementById('cfg-warnThreshold').value = s.warnThreshold || 120;
                 if (document.getElementById('cfg-dangerThreshold').value != s.dangerThreshold) document.getElementById('cfg-dangerThreshold').value = s.dangerThreshold || 0;
                 if (document.getElementById('cfg-fontFamily').value !== s.fontFamily) document.getElementById('cfg-fontFamily').value = s.fontFamily || 'JetBrains Mono';
+                if (document.getElementById('cfg-progressColor').value !== s.progressColor) document.getElementById('cfg-progressColor').value = s.progressColor || '#22c55e';
+                if (document.getElementById('cfg-language').value !== s.language) document.getElementById('cfg-language').value = s.language || 'en';
                 if (document.getElementById('cfg-clockScale').value != s.clockScale) document.getElementById('cfg-clockScale').value = s.clockScale || 100;
                 if (document.getElementById('cfg-clockOffsetX').value != s.clockOffsetX) document.getElementById('cfg-clockOffsetX').value = s.clockOffsetX || 0;
                 if (document.getElementById('cfg-clockOffsetY').value != s.clockOffsetY) document.getElementById('cfg-clockOffsetY').value = s.clockOffsetY || 0;
