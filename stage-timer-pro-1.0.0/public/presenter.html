@@ -133,7 +133,7 @@
             const scale = (state.clockScale || 100) / 100;
             const offsetX = state.clockOffsetX || 0;
             const offsetY = state.clockOffsetY || 0;
-            document.getElementById('clock-container').style.transform = `translate(${offsetX}vw, ${offsetY}vh) scale(${scale})`;
+            clock.style.transform = `translate(${offsetX}vw, ${offsetY}vh) scale(${scale})`;
 
             // Re-apply blink colors logic just in case it's blinking
             if (state.mode === 'countdown' && state.timeLeft <= 0 && state.blink_state) {
@@ -142,31 +142,8 @@
             }
 
 
-            // Dynamic Styles
-            document.documentElement.style.setProperty('--bg', state.bgColor || '#000000');
-            document.documentElement.style.setProperty('--text', state.textColor || '#22c55e');
-            document.documentElement.style.setProperty('--warn', state.warnColor || '#f97316');
-            document.documentElement.style.setProperty('--danger', state.dangerColor || '#ef4444');
-
-            document.body.style.backgroundColor = 'var(--bg)';
-            document.body.style.color = 'var(--text)';
-
-            clock.style.fontFamily = state.fontFamily || "'JetBrains Mono', monospace";
-
-            const scale = (state.clockScale || 100) / 100;
-            const offsetX = state.clockOffsetX || 0;
-            const offsetY = state.clockOffsetY || 0;
-            document.getElementById('clock-container').style.transform = `translate(${offsetX}vw, ${offsetY}vh) scale(${scale})`;
-
-            // Re-apply blink colors logic just in case it's blinking
-            if (state.mode === 'countdown' && state.timeLeft <= 0 && state.blink_state) {
-                document.body.style.backgroundColor = 'var(--text)'; // Basic inverse blink
-                document.body.style.color = 'var(--bg)';
-            }
-
-
-            if (state.ip && !ipOverlay.dataset.hidden) {
-                ipOverlay.innerText = "IP: " + state.ip;
+            if (!ipOverlay.dataset.hidden) {
+                ipOverlay.innerText = "IP: " + (state.ip || 'Unknown');
                 setTimeout(() => { ipOverlay.style.display = 'none'; ipOverlay.dataset.hidden = 'true'; }, 15000);
             }
 
@@ -178,11 +155,9 @@
                 if (!localTimeInterval) {
                     localTimeInterval = setInterval(() => {
                         if(currentMode === 'timeofday') {
-
                             const opts = { hour12: false, hour: '2-digit', minute: '2-digit' };
-                            if (state.showSeconds !== false) opts.second = '2-digit';
+                            if (window.showSecondsState !== false) opts.second = '2-digit';
                             clock.innerText = new Date().toLocaleTimeString('en-US', opts);
-
                             clock.style.fontSize = (84 / (8 * 0.6)) + "vw";
                         }
                     }, 1000);
