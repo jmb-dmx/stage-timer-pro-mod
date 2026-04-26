@@ -34,6 +34,21 @@ if [ -d "$APP_DIR" ]; then
     sudo rm -rf "$APP_DIR"
 fi
 git clone "$REPO_URL" "$APP_DIR"
+
+# Handle repos that clone into a sub-folder (like "stage-timer-pro-1.0.0/")
+if [ ! -f "$APP_DIR/server.js" ] && [ -d "$APP_DIR/stage-timer-pro-1.0.0" ]; then
+    echo "Detected nested folder structure. Adjusting APP_DIR..."
+    APP_DIR="$APP_DIR/stage-timer-pro-1.0.0"
+fi
+# General fallback check for any single nested directory
+if [ ! -f "$APP_DIR/server.js" ]; then
+    NESTED_DIR=$(find "$APP_DIR" -mindepth 1 -maxdepth 1 -type d | head -n 1)
+    if [ -n "$NESTED_DIR" ] && [ -f "$NESTED_DIR/server.js" ]; then
+        echo "Detected nested folder structure ($NESTED_DIR). Adjusting APP_DIR..."
+        APP_DIR="$NESTED_DIR"
+    fi
+fi
+
 cd "$APP_DIR"
 
 echo -e "\n[6/7] Installing Node App Dependencies..."
