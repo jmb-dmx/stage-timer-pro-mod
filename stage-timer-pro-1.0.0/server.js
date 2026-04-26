@@ -323,7 +323,7 @@ app.get('/api/system/restart', (req, res) => {
 
 app.get('/api/system/update', (req, res) => {
     res.send('Pulling Firmware and System Updates (This may take a few minutes)...');
-    const updateCmd = 'git pull && npm install && sudo apt update && sudo apt upgrade -y && sudo systemctl restart stage-timer';
+    const updateCmd = 'git fetch --all && git reset --hard origin/main && npm install && sudo systemctl restart stage-timer';
     exec(updateCmd, { cwd: __dirname }, (error) => {
         if (error) console.error(`Update error: ${error}`);
     });

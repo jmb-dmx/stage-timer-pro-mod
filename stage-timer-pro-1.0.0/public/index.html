@@ -259,7 +259,6 @@
         <header>
             <div style="font-weight: 900; font-size: 24px;">Stage Timer Pro <span style="font-size: 12px; opacity: 0.5; font-weight: normal;">Moderator</span></div>
             <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 10px;">
-                <div class="ip-badge" id="ip-display">Connecting...</div>
                 <button id="btn-audio" onclick="toggleAudio()" class="btn-header-danger" style="color:var(--text-dim); border-color:var(--border);">🔕 AUDIO OFF</button>
                 <button onclick="toggleLang()" class="lang-toggle" id="btn-lang">FR</button>
                 <button onclick="openSettings()" class="btn-header-danger" style="background:var(--card); color:white; border-color:var(--border);">⚙️ SETTINGS</button>
@@ -418,7 +417,7 @@
                 clock_scale: "Clock Scale (%)",
                 clock_offset_x: "Clock Offset X (%)",
                 clock_offset_y: "Clock Offset Y (%)",
-                show_seconds: "Show Seconds", language: "Language", progress_color: "Progress Bar Color", wifi_conn: "Wi-Fi Connection", scan_net: "SCAN NETWORKS", wifi_pass: "Password (if needed)", connect: "CONNECT", static_ip: "Static IP (For Current Wi-Fi)", ip_addr: "IP (192.168.1.50)", gateway: "Gateway (192.168.1.1)", apply_static: "APPLY STATIC", revert_dhcp: "REVERT TO DHCP", ap_fallback: "Access Point (Fallback)", ap_on: "TURN ON AP", ap_off: "TURN OFF AP", sys_mgmt: "System Management", new_host: "New Hostname", set_btn: "SET", update_firmware: "PULL FIRMWARE UPDATE (GIT)", cancel: "CANCEL", set_mins: "Set Minutes...", enter_msg: "Enter custom message...", reset_defaults: "Reset to Defaults", show_progress: "Show Progress Bar"
+                show_seconds: "Show Seconds", language: "Language", progress_color: "Progress Bar Color", wifi_conn: "Wi-Fi Connection", scan_net: "SCAN NETWORKS", wifi_pass: "Password (if needed)", connect: "CONNECT", static_ip: "Static IP (For Current Wi-Fi)", ip_addr: "IP (192.168.1.50)", gateway: "Gateway (192.168.1.1)", apply_static: "APPLY STATIC", revert_dhcp: "REVERT TO DHCP", ap_fallback: "Access Point (Fallback)", ap_on: "TURN ON AP", ap_off: "TURN OFF AP", sys_mgmt: "System Management", new_host: "New Hostname", set_btn: "SET", update_firmware: "PULL FIRMWARE UPDATE (GIT)", cancel: "CANCEL", set_mins: "MM:SS...", enter_msg: "Enter custom message...", reset_defaults: "Reset to Defaults", show_progress: "Show Progress Bar"
             },
             fr: {
                 moderator: "Modérateur",
@@ -462,14 +461,13 @@
                 clock_scale: "Taille de l'Horloge (%)",
                 clock_offset_x: "Décalage Horloge X (%)",
                 clock_offset_y: "Décalage Horloge Y (%)",
-                show_seconds: "Afficher Secondes", language: "Langue", progress_color: "Couleur de la barre de progression", wifi_conn: "Connexion Wi-Fi", scan_net: "SCANNER RÉSEAUX", wifi_pass: "Mot de passe", connect: "CONNECTER", static_ip: "IP Statique", ip_addr: "IP (192.168.1.50)", gateway: "Passerelle (192.168.1.1)", apply_static: "APPLIQUER STATIQUE", revert_dhcp: "RETOURNER AU DHCP", ap_fallback: "Point d'Accès (Secours)", ap_on: "ACTIVER PA", ap_off: "DÉSACTIVER PA", sys_mgmt: "Gestion Système", new_host: "Nouveau Nom d'hôte", set_btn: "DÉFINIR", update_firmware: "METTRE À JOUR LE SYSTÈME (GIT)", cancel: "ANNULER", set_mins: "Minutes...", enter_msg: "Message personnalisé...", reset_defaults: "Réinitialiser", show_progress: "Afficher barre de progression"
+                show_seconds: "Afficher Secondes", language: "Langue", progress_color: "Couleur de la barre de progression", wifi_conn: "Connexion Wi-Fi", scan_net: "SCANNER RÉSEAUX", wifi_pass: "Mot de passe", connect: "CONNECTER", static_ip: "IP Statique", ip_addr: "IP (192.168.1.50)", gateway: "Passerelle (192.168.1.1)", apply_static: "APPLIQUER STATIQUE", revert_dhcp: "RETOURNER AU DHCP", ap_fallback: "Point d'Accès (Secours)", ap_on: "ACTIVER PA", ap_off: "DÉSACTIVER PA", sys_mgmt: "Gestion Système", new_host: "Nouveau Nom d'hôte", set_btn: "DÉFINIR", update_firmware: "METTRE À JOUR LE SYSTÈME (GIT)", cancel: "ANNULER", set_mins: "MM:SS...", enter_msg: "Message personnalisé...", reset_defaults: "Réinitialiser", show_progress: "Afficher barre de progression"
             }
         };
 
         let currentLang = 'en';
 
         function updateLangUI() {
-            document.getElementById('btn-lang').innerText = currentLang === 'en' ? 'FR' : 'EN';
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 if (i18n[currentLang][key]) {
@@ -595,7 +593,18 @@
         }
 
         function updateMsgText(){ fetch(`/api/message/set?text=${encodeURIComponent(document.getElementById('minput').value)}`); }
-        function setCustomTime() { const mins = document.getElementById('custom-min').value; if (mins) api('reset', parseInt(mins) * 60); }
+        function setCustomTime() {
+            const val = document.getElementById('custom-min').value.trim();
+            if (!val) return;
+            let seconds = 0;
+            if (val.includes(':')) {
+                const parts = val.split(':');
+                seconds = (parseInt(parts[0]) || 0) * 60 + (parseInt(parts[1]) || 0);
+            } else {
+                seconds = parseInt(val) * 60;
+            }
+            if (seconds > 0) api('reset', seconds);
+        }
         function addQuickMessage() {
             const text = document.getElementById('minput').value.trim();
             if(text) { fetch(`/api/messages/add?text=${encodeURIComponent(text)}`); document.getElementById('minput').value = ''; }

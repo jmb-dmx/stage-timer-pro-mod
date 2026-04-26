@@ -29,6 +29,9 @@ sudo raspi-config nonint do_boot_behaviour B2
 echo -e "\n[4/7] Setting up user permissions..."
 sudo usermod -a -G video,render,input,tty $CURRENT_USER
 
+# Grant passwordless sudo to the current user so the Node API can run systemctl, nmcli, etc.
+echo "$CURRENT_USER ALL=(ALL) NOPASSWD: ALL" | sudo tee "/etc/sudoers.d/010_stagetimer-nopasswd"
+
 echo -e "\n[5/7] Downloading latest code from Git..."
 if [ -d "$APP_DIR" ]; then
     sudo rm -rf "$APP_DIR"
