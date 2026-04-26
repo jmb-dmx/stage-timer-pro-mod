@@ -7,7 +7,7 @@ echo "  Stage Timer Pro - Automated Deployment"
 echo "================================================="
 
 # --- CONFIGURATION ---
-REPO_URL="https://github.com/ondrejvysek/stage-timer-pro.git"
+REPO_URL="${1:-https://github.com/ondrejvysek/stage-timer-pro.git}"
 CURRENT_USER=$(whoami)
 APP_DIR="$HOME/stage-timer"
 
@@ -120,6 +120,21 @@ sudo systemctl start stage-timer
 
 # Bind the Kiosk launch to the physical HDMI console autologin using X11
 echo '[[ -z $DISPLAY && $XDG_VTNR -eq 1 ]] && exec startx "'$APP_DIR'/start-timer.sh" -- -nocursor' > "$HOME/.bash_profile"
+
+echo -e "\n[8/8] Setting up Bitfocus Companion Streamdeck Module..."
+# Automate companion module installation if companion is installed
+if id "companion" &>/dev/null || [ -d "/opt/companion-module-dev" ]; then
+    echo "Companion Pi detected. Installing custom module..."
+    sudo mkdir -p /opt/companion-module-dev/stage-timer-pro
+    sudo cp -r "$APP_DIR/companion/stage-timer/"* /opt/companion-module-dev/stage-timer-pro/
+    cd /opt/companion-module-dev/stage-timer-pro
+    sudo npm install @companion-module/base@^1.14.1
+    sudo chown -R companion:companion /opt/companion-module-dev/stage-timer-pro 2>/dev/null || true
+    sudo systemctl restart companion 2>/dev/null || true
+    echo "Companion module installed successfully!"
+else
+    echo "Companion not detected on this system. Skipping module installation."
+fi
 
 echo "================================================="
 echo "  Setup Complete! "
