@@ -96,7 +96,15 @@
 
         .hidden { display: none; }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
+        /* Display Config Styles */
+        .config-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .config-label { font-size: 12px; color: var(--text-dim); }
+        .config-input { background: #1e293b; border: 1px solid #334155; color: #fff; padding: 5px; border-radius: 4px; }
+        .config-range { flex: 1; margin: 0 10px; }
+        .lang-toggle { background: var(--blue); color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; }
     </style>
+
 </head>
 <body>
     <div id="settings-modal" class="modal-overlay">
@@ -106,56 +114,131 @@
                 <button onclick="closeSettings()" style="background:none; border:none; color:white; font-size:20px; cursor:pointer;">×</button>
             </div>
             
+
+            <div class="sys-group" id="display-config-panel">
+                <h3 data-i18n="display_config">Display Configuration</h3>
+                <div class="config-row" style="justify-content: flex-end;">
+                    <button onclick="resetDefaults()" class="sys-btn sys-btn-danger" style="padding: 5px 10px; font-size: 10px;" data-i18n="reset_defaults">Reset to Defaults</button>
+                </div>
+                <div class="config-row">
+                    <span class="config-label" data-i18n="language">Language / Langue</span>
+                    <select id="cfg-language" class="config-input" onchange="updateConfig()">
+                        <option value="en">English</option>
+                        <option value="fr">Français</option>
+                    </select>
+                </div>
+                <div class="config-row">
+                    <span class="config-label" data-i18n="progress_color">Progress Bar Color</span>
+                    <input type="color" id="cfg-progressColor" class="config-input" onchange="updateConfig()">
+                </div>
+                <div class="config-row">
+                    <span class="config-label" data-i18n="text_color">Text Color</span>
+                    <input type="color" id="cfg-textColor" class="config-input" onchange="updateConfig()">
+                </div>
+                <div class="config-row">
+                    <span class="config-label" data-i18n="bg_color">Background Color</span>
+                    <input type="color" id="cfg-bgColor" class="config-input" onchange="updateConfig()">
+                </div>
+                <div class="config-row">
+                    <span class="config-label" data-i18n="warn_color">Warning Color</span>
+                    <input type="color" id="cfg-warnColor" class="config-input" onchange="updateConfig()">
+                </div>
+                <div class="config-row">
+                    <span class="config-label" data-i18n="danger_color">Danger Color</span>
+                    <input type="color" id="cfg-dangerColor" class="config-input" onchange="updateConfig()">
+                </div>
+                <div class="config-row">
+                    <span class="config-label" data-i18n="warn_threshold">Warning Threshold (sec)</span>
+                    <input type="number" id="cfg-warnThreshold" class="config-input" style="width: 60px;" onchange="updateConfig()">
+                </div>
+                <div class="config-row">
+                    <span class="config-label" data-i18n="danger_threshold">Danger Threshold (sec)</span>
+                    <input type="number" id="cfg-dangerThreshold" class="config-input" style="width: 60px;" onchange="updateConfig()">
+                </div>
+                <div class="config-row">
+                    <span class="config-label" data-i18n="font_family">Font Family</span>
+                    <select id="cfg-fontFamily" class="config-input" onchange="updateConfig()">
+                        <option value="JetBrains Mono">JetBrains Mono</option>
+                        <option value="Inter">Inter</option>
+                        <option value="sans-serif">Sans-serif</option>
+                        <option value="monospace">Monospace</option>
+                    </select>
+                </div>
+                <div class="config-row">
+                    <span class="config-label" data-i18n="clock_scale">Clock Scale (%)</span>
+                    <input type="range" id="cfg-clockScale" class="config-range" min="10" max="200" oninput="updateConfig()">
+                    <span id="cfg-clockScale-val" class="config-label">100</span>
+                </div>
+                <div class="config-row">
+                    <span class="config-label" data-i18n="clock_offset_x">Clock Offset X (%)</span>
+                    <input type="range" id="cfg-clockOffsetX" class="config-range" min="-50" max="50" oninput="updateConfig()">
+                    <span id="cfg-clockOffsetX-val" class="config-label">0</span>
+                </div>
+                <div class="config-row">
+                    <span class="config-label" data-i18n="clock_offset_y">Clock Offset Y (%)</span>
+                    <input type="range" id="cfg-clockOffsetY" class="config-range" min="-50" max="50" oninput="updateConfig()">
+                    <span id="cfg-clockOffsetY-val" class="config-label">0</span>
+                </div>
+                <div class="config-row">
+                    <span class="config-label" data-i18n="show_seconds">Show Seconds</span>
+                    <input type="checkbox" id="cfg-showSeconds" onchange="updateConfig()">
+                </div>
+                <div class="config-row">
+                    <span class="config-label" data-i18n="show_progress">Show Progress Bar</span>
+                    <input type="checkbox" id="cfg-showProgressBar" onchange="updateConfig()">
+                </div>
+            </div>
+
             <div class="sys-group">
-                <h3>Wi-Fi Connection</h3>
+                <h3 data-i18n="wifi_conn">Wi-Fi Connection</h3>
                 <div class="sys-row">
-                    <button onclick="scanWifi()" class="sys-btn" style="width: 100%;">SCAN NETWORKS</button>
+                    <button onclick="scanWifi()" class="sys-btn" style="width: 100%;" data-i18n="scan_net">SCAN NETWORKS</button>
                 </div>
                 <div class="sys-row hidden" id="wifi-select-row">
                     <select id="wifi-ssid" class="sys-input" onchange="toggleWifiPass()"></select>
                 </div>
                 <div class="sys-row hidden" id="wifi-pass-row">
-                    <input type="password" id="wifi-pass" class="sys-input" placeholder="Password (if needed)">
-                    <button onclick="connectWifi()" class="sys-btn">CONNECT</button>
+                    <input type="password" id="wifi-pass" class="sys-input" placeholder="Password (if needed)" data-i18n="wifi_pass">
+                    <button onclick="connectWifi()" class="sys-btn" data-i18n="connect">CONNECT</button>
                 </div>
                 <p id="wifi-status" style="font-size: 11px; color: var(--green); margin:0;"></p>
             </div>
 
             <div class="sys-group">
-                <h3>Static IP (For Current Wi-Fi)</h3>
+                <h3 data-i18n="static_ip">Static IP (For Current Wi-Fi)</h3>
                 <p id="current-ip-info" style="font-size: 11px; color: var(--text-dim); margin-top: -10px; margin-bottom: 10px;">Current Netmask: Loading...</p>
                 <div class="sys-row">
-                    <input type="text" id="static-ip" class="sys-input" placeholder="IP (192.168.1.50)">
+                    <input type="text" id="static-ip" class="sys-input" placeholder="IP (192.168.1.50)" data-i18n="ip_addr">
                     <input type="text" id="static-mask" class="sys-input" placeholder="Mask (e.g. 24)" style="flex: none; width: 100px;">
                 </div>
                 <div class="sys-row">
-                    <input type="text" id="static-gw" class="sys-input" placeholder="Gateway (192.168.1.1)">
+                    <input type="text" id="static-gw" class="sys-input" placeholder="Gateway (192.168.1.1)" data-i18n="gateway">
                 </div>
                 <div class="sys-row">
-                    <button onclick="setStaticIP()" class="sys-btn" style="flex:1;">APPLY STATIC</button>
-                    <button onclick="setAutoIP()" class="sys-btn sys-btn-warn" style="flex:1;">REVERT TO DHCP</button>
+                    <button onclick="setStaticIP()" class="sys-btn" style="flex:1;" data-i18n="apply_static">APPLY STATIC</button>
+                    <button onclick="setAutoIP()" class="sys-btn sys-btn-warn" style="flex:1;" data-i18n="revert_dhcp">REVERT TO DHCP</button>
                 </div>
             </div>
 
             <div class="sys-group">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <h3 style="margin: 0;">Access Point (Fallback)</h3>
+                    <h3 style="margin: 0;" data-i18n="ap_fallback">Access Point (Fallback)</h3>
                     <span id="ap-status-badge" class="msg-status-badge status-off" style="float: none; position: static;">CHECKING...</span>
                 </div>
                 <div class="sys-row">
-                    <button onclick="toggleAP('on')" class="sys-btn" style="flex:1; background: var(--green);">TURN ON AP</button>
-                    <button onclick="toggleAP('down')" class="sys-btn sys-btn-danger" style="flex:1;">TURN OFF AP</button>
+                    <button onclick="toggleAP('on')" class="sys-btn" style="flex:1; background: var(--green);" data-i18n="ap_on">TURN ON AP</button>
+                    <button onclick="toggleAP('down')" class="sys-btn sys-btn-danger" style="flex:1;" data-i18n="ap_off">TURN OFF AP</button>
                 </div>
             </div>
 
             <div class="sys-group">
-                <h3>System Management</h3>
+                <h3 data-i18n="sys_mgmt">System Management</h3>
                 <div class="sys-row">
-                    <input type="text" id="sys-hostname" class="sys-input" placeholder="New Hostname">
-                    <button onclick="setHostname()" class="sys-btn">SET</button>
+                    <input type="text" id="sys-hostname" class="sys-input" placeholder="New Hostname" data-i18n="new_host">
+                    <button onclick="setHostname()" class="sys-btn" data-i18n="set_btn">SET</button>
                 </div>
                 <div class="sys-row" style="margin-top: 15px;">
-                    <button onclick="updateFirmware()" class="sys-btn sys-btn-warn" style="flex: 1;">PULL FIRMWARE UPDATE (GIT)</button>
+                    <button onclick="updateFirmware()" class="sys-btn sys-btn-warn" style="flex: 1;" data-i18n="update_firmware">PULL FIRMWARE UPDATE (GIT)</button>
                 </div>
             </div>
         </div>
@@ -166,8 +249,8 @@
             <h3 style="color: var(--red); margin-top:0;">SYSTEM RESTART</h3>
             <p style="color: var(--text-dim); margin-bottom: 25px;">Are you sure you want to restart the Stage Timer service?</p>
             <div class="btn-grid">
-                <button onclick="document.getElementById('restart-modal').classList.remove('active')" class="btn btn-dim" style="padding: 15px;">CANCEL</button>
-                <button onclick="confirmRestart()" class="btn btn-toggle-on" style="padding: 15px; flex-direction: row;">RESTART</button>
+                <button onclick="document.getElementById('restart-modal').classList.remove('active')" class="btn btn-dim" style="padding: 15px;" data-i18n="cancel">CANCEL</button>
+                <button onclick="confirmRestart()" class="btn btn-toggle-on" style="padding: 15px; flex-direction: row;" data-i18n="restart">RESTART</button>
             </div>
         </div>
     </div>
@@ -178,6 +261,7 @@
             <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 10px;">
                 <div class="ip-badge" id="ip-display">Connecting...</div>
                 <button id="btn-audio" onclick="toggleAudio()" class="btn-header-danger" style="color:var(--text-dim); border-color:var(--border);">🔕 AUDIO OFF</button>
+                <button onclick="toggleLang()" class="lang-toggle" id="btn-lang">FR</button>
                 <button onclick="openSettings()" class="btn-header-danger" style="background:var(--card); color:white; border-color:var(--border);">⚙️ SETTINGS</button>
                 <button onclick="document.getElementById('restart-modal').classList.add('active')" class="btn-header-danger" style="color:var(--red);">RESTART</button>
             </div>
@@ -186,7 +270,7 @@
         <div class="grid">
             <div class="side-left">
                 <section class="card" style="margin-bottom: 20px;">
-                    <h2>Live Monitor</h2>
+                    <h2 data-i18n="live_monitor">Live Monitor</h2>
                     <div id="m-frame" class="monitor">
                         <img id="m-logo-img" src="" class="hidden" style="position: absolute; max-width: 80%; max-height: 80%; object-fit: contain; opacity: 0.8; z-index: 1;">
                         <div id="m-time" class="monitor-time">10:00</div>
@@ -199,7 +283,7 @@
                 </section>
                 
                 <section class="card" style="margin-bottom: 20px;">
-                    <h2>Display Mode</h2>
+                    <h2 data-i18n="display_mode">Display Mode</h2>
                     <div class="preset-grid cols-4" style="margin-bottom: 0;">
                         <button onclick="api('mode', '?set=countdown')" class="btn-preset" id="mode-countdown">Countdown</button>
                         <button onclick="api('mode', '?set=countup')" class="btn-preset" id="mode-countup">Count-Up</button>
@@ -209,7 +293,7 @@
                 </section>
 
                 <section class="card">
-                    <h2>Quick Presets & Custom Time</h2>
+                    <h2 data-i18n="quick_presets">Quick Presets & Custom Time</h2>
                     <div class="preset-grid">
                         <button onclick="api('reset',60)" class="btn-preset">1m</button>
                         <button onclick="api('reset',300)" class="btn-preset">5m</button>
@@ -219,7 +303,7 @@
                         <button onclick="api('reset',3600)" class="btn-preset">60m</button>
                     </div>
                     <div class="custom-time-row">
-                        <input type="number" id="custom-min" placeholder="Set Minutes..." class="input-compact">
+                        <input type="number" id="custom-min" placeholder="Set Minutes..." data-i18n="set_mins" class="input-compact">
                         <button onclick="setCustomTime()" class="btn-set">SET TIME</button>
                     </div>
                 </section>
@@ -227,7 +311,7 @@
 
             <div class="side-right">
                 <section class="card" style="margin-bottom: 20px;">
-                    <h2>Transport Controls</h2>
+                    <h2 data-i18n="transport_controls">Transport Controls</h2>
                     <div class="btn-grid">
                         <div id="transport-toggle">
                             <button id="b-start" onclick="api('start')" class="btn btn-start" style="width: 100%;">
@@ -261,12 +345,12 @@
                 </section>
 
                 <section class="card" style="margin-bottom: 20px;">
-                    <h2>Messaging Control</h2>
-                    <input type="text" id="minput" placeholder="Enter custom message..." class="msg-input" oninput="updateMsgText()">
+                    <h2 data-i18n="msg_control">Messaging Control</h2>
+                    <input type="text" id="minput" placeholder="Enter custom message..." data-i18n="enter_msg" class="msg-input" oninput="updateMsgText()">
                     <button id="btn-toggle" onclick="api('message/toggle')" class="btn btn-toggle btn-toggle-off" style="margin-bottom: 20px;">SHOW MESSAGE</button>
                     
                     <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 15px; margin-top: 10px;">
-                        <h2 style="margin: 0;">Quick Message Bank (Instant Live)</h2>
+                        <h2 style="margin: 0;" data-i18n="quick_msg_bank">Quick Message Bank (Instant Live)</h2>
                         <button onclick="addQuickMessage()" class="btn-blue" style="padding: 6px 12px; border-radius: 6px; font-size: 10px; font-weight: 900; letter-spacing: 1px;">+ SAVE</button>
                     </div>
                     
@@ -274,14 +358,14 @@
                 </section>
 
                 <section class="card">
-                    <h2>Event Logo Upload</h2>
+                    <h2 data-i18n="event_logo_upload">Event Logo Upload</h2>
                     <div class="logo-preview-box" id="logo-preview-container">
                         <span class="logo-empty-text" id="logo-empty-hint">No Logo Uploaded</span>
                         <img id="logo-preview-img" src="" class="hidden">
                     </div>
                     <div class="custom-time-row">
                         <input type="file" id="logo-input" accept="image/*" class="hidden" onchange="handleLogoSelection(this)">
-                        <button onclick="document.getElementById('logo-input').click()" class="btn-set" style="flex:1; padding: 15px;">UPLOAD LOGO</button>
+                        <button onclick="document.getElementById('logo-input').click()" class="btn-set" style="flex:1; padding: 15px;" data-i18n="upload_logo">UPLOAD LOGO</button>
                         <button onclick="clearLogo()" class="btn-set" style="background: var(--red); flex:none; padding: 0 20px;">🗑️</button>
                     </div>
                 </section>
@@ -290,6 +374,179 @@
     </div>
 
     <script>
+
+        const i18n = {
+            en: {
+                moderator: "Moderator",
+                audio_off: "🔕 AUDIO OFF",
+                audio_on: "🔔 AUDIO ON",
+                settings: "⚙️ SETTINGS",
+                restart: "RESTART",
+                live_monitor: "Live Monitor",
+                off_air: "OFF AIR",
+                live_on_stage: "LIVE ON STAGE",
+                msg_preview: "MESSAGE PREVIEW",
+                no_msg_set: "No message set",
+                display_mode: "Display Mode",
+                countdown: "Countdown",
+                countup: "Count-Up",
+                timeofday: "Time of Day",
+                idle_logo: "Idle / Logo",
+                quick_presets: "Quick Presets & Custom Time",
+                set_time: "SET TIME",
+                transport_controls: "Transport Controls",
+                start: "START",
+                pause: "PAUSE",
+                reset: "RESET",
+                msg_control: "Messaging Control",
+                show_msg: "SHOW MESSAGE",
+                hide_msg: "HIDE MESSAGE",
+                quick_msg_bank: "Quick Message Bank (Instant Live)",
+                save: "+ SAVE",
+                event_logo_upload: "Event Logo Upload",
+                no_logo: "No Logo Uploaded",
+                upload_logo: "UPLOAD LOGO",
+                sys_settings: "SYSTEM SETTINGS",
+                display_config: "Display Configuration",
+                text_color: "Text Color",
+                bg_color: "Background Color",
+                warn_color: "Warning Color",
+                danger_color: "Danger Color",
+                warn_threshold: "Warning Threshold (sec)",
+                danger_threshold: "Danger Threshold (sec)",
+                font_family: "Font Family",
+                clock_scale: "Clock Scale (%)",
+                clock_offset_x: "Clock Offset X (%)",
+                clock_offset_y: "Clock Offset Y (%)",
+                show_seconds: "Show Seconds", language: "Language", progress_color: "Progress Bar Color", wifi_conn: "Wi-Fi Connection", scan_net: "SCAN NETWORKS", wifi_pass: "Password (if needed)", connect: "CONNECT", static_ip: "Static IP (For Current Wi-Fi)", ip_addr: "IP (192.168.1.50)", gateway: "Gateway (192.168.1.1)", apply_static: "APPLY STATIC", revert_dhcp: "REVERT TO DHCP", ap_fallback: "Access Point (Fallback)", ap_on: "TURN ON AP", ap_off: "TURN OFF AP", sys_mgmt: "System Management", new_host: "New Hostname", set_btn: "SET", update_firmware: "PULL FIRMWARE UPDATE (GIT)", cancel: "CANCEL", set_mins: "Set Minutes...", enter_msg: "Enter custom message...", reset_defaults: "Reset to Defaults", show_progress: "Show Progress Bar"
+            },
+            fr: {
+                moderator: "Modérateur",
+                audio_off: "🔕 AUDIO DÉSACTIVÉ",
+                audio_on: "🔔 AUDIO ACTIVÉ",
+                settings: "⚙️ PARAMÈTRES",
+                restart: "REDÉMARRER",
+                live_monitor: "Moniteur en Direct",
+                off_air: "HORS ANTENNE",
+                live_on_stage: "EN DIRECT SUR SCÈNE",
+                msg_preview: "APERÇU DU MESSAGE",
+                no_msg_set: "Aucun message défini",
+                display_mode: "Mode d'Affichage",
+                countdown: "Compte à rebours",
+                countup: "Chronomètre",
+                timeofday: "Heure du Jour",
+                idle_logo: "Inactif / Logo",
+                quick_presets: "Préréglages & Temps Personnalisé",
+                set_time: "DÉFINIR",
+                transport_controls: "Contrôles de Transport",
+                start: "DÉMARRER",
+                pause: "PAUSER",
+                reset: "RÉINITIALISER",
+                msg_control: "Contrôle des Messages",
+                show_msg: "AFFICHER MSG",
+                hide_msg: "MASQUER MSG",
+                quick_msg_bank: "Banque de Messages (Direct)",
+                save: "+ SAUV.",
+                event_logo_upload: "Logo de l'Événement",
+                no_logo: "Aucun Logo",
+                upload_logo: "IMPORTER LOGO",
+                sys_settings: "PARAMÈTRES SYSTÈME",
+                display_config: "Configuration de l'Affichage",
+                text_color: "Couleur du Texte",
+                bg_color: "Couleur de Fond",
+                warn_color: "Couleur d'Avertissement",
+                danger_color: "Couleur de Danger",
+                warn_threshold: "Seuil Avertissement (sec)",
+                danger_threshold: "Seuil Danger (sec)",
+                font_family: "Police",
+                clock_scale: "Taille de l'Horloge (%)",
+                clock_offset_x: "Décalage Horloge X (%)",
+                clock_offset_y: "Décalage Horloge Y (%)",
+                show_seconds: "Afficher Secondes", language: "Langue", progress_color: "Couleur de la barre de progression", wifi_conn: "Connexion Wi-Fi", scan_net: "SCANNER RÉSEAUX", wifi_pass: "Mot de passe", connect: "CONNECTER", static_ip: "IP Statique", ip_addr: "IP (192.168.1.50)", gateway: "Passerelle (192.168.1.1)", apply_static: "APPLIQUER STATIQUE", revert_dhcp: "RETOURNER AU DHCP", ap_fallback: "Point d'Accès (Secours)", ap_on: "ACTIVER PA", ap_off: "DÉSACTIVER PA", sys_mgmt: "Gestion Système", new_host: "Nouveau Nom d'hôte", set_btn: "DÉFINIR", update_firmware: "METTRE À JOUR LE SYSTÈME (GIT)", cancel: "ANNULER", set_mins: "Minutes...", enter_msg: "Message personnalisé...", reset_defaults: "Réinitialiser", show_progress: "Afficher barre de progression"
+            }
+        };
+
+        let currentLang = 'en';
+
+        function updateLangUI() {
+            document.getElementById('btn-lang').innerText = currentLang === 'en' ? 'FR' : 'EN';
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (i18n[currentLang][key]) {
+                    if (el.tagName === 'INPUT' && (el.type === 'text' || el.type === 'password' || el.type === 'number')) el.placeholder = i18n[currentLang][key];
+                    else el.innerText = i18n[currentLang][key];
+                }
+            });
+            // Update static elements that don't have data-i18n cleanly
+            document.querySelector('header span').innerText = i18n[currentLang].moderator;
+            document.querySelector('.modal-title').childNodes[0].nodeValue = i18n[currentLang].sys_settings + ' ';
+            document.querySelector('#b-start span').innerText = i18n[currentLang].start;
+            document.querySelector('#b-pause span').innerText = i18n[currentLang].pause;
+            document.querySelector('.btn-reset span').innerText = i18n[currentLang].reset;
+            document.querySelector('#mode-countdown').innerText = i18n[currentLang].countdown;
+            document.querySelector('#mode-countup').innerText = i18n[currentLang].countup;
+            document.querySelector('#mode-timeofday').innerText = i18n[currentLang].timeofday;
+            document.querySelector('#mode-logo').innerText = i18n[currentLang].idle_logo;
+
+            const btnAudio = document.getElementById('btn-audio');
+            btnAudio.innerText = audioEnabled ? i18n[currentLang].audio_on : i18n[currentLang].audio_off;
+        }
+
+        function toggleLang() {
+            currentLang = currentLang === 'en' ? 'fr' : 'en';
+            updateConfig();
+        }
+
+        function updateConfig() {
+            const config = {
+                textColor: document.getElementById('cfg-textColor').value,
+                bgColor: document.getElementById('cfg-bgColor').value,
+                warnColor: document.getElementById('cfg-warnColor').value,
+                dangerColor: document.getElementById('cfg-dangerColor').value,
+                warnThreshold: document.getElementById('cfg-warnThreshold').value,
+                dangerThreshold: document.getElementById('cfg-dangerThreshold').value,
+                fontFamily: document.getElementById('cfg-fontFamily').value,
+                clockScale: document.getElementById('cfg-clockScale').value,
+                clockOffsetX: document.getElementById('cfg-clockOffsetX').value,
+                clockOffsetY: document.getElementById('cfg-clockOffsetY').value,
+                showSeconds: document.getElementById('cfg-showSeconds').checked,
+                showProgressBar: document.getElementById('cfg-showProgressBar').checked,
+                progressColor: document.getElementById('cfg-progressColor').value,
+                language: document.getElementById('cfg-language').value
+            };
+
+            document.getElementById('cfg-clockScale-val').innerText = config.clockScale;
+            document.getElementById('cfg-clockOffsetX-val').innerText = config.clockOffsetX;
+            document.getElementById('cfg-clockOffsetY-val').innerText = config.clockOffsetY;
+
+            fetch('/api/config/update', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(config)
+            });
+        }
+
+        function resetDefaults() {
+            if(confirm("Are you sure you want to reset display configuration to default?")) {
+                document.getElementById('cfg-textColor').value = '#22c55e';
+                document.getElementById('cfg-bgColor').value = '#000000';
+                document.getElementById('cfg-warnColor').value = '#f97316';
+                document.getElementById('cfg-dangerColor').value = '#ef4444';
+                document.getElementById('cfg-progressColor').value = '#22c55e';
+                document.getElementById('cfg-warnThreshold').value = 120;
+                document.getElementById('cfg-dangerThreshold').value = 0;
+                document.getElementById('cfg-fontFamily').value = 'JetBrains Mono';
+                document.getElementById('cfg-clockScale').value = 100;
+                document.getElementById('cfg-clockOffsetX').value = 0;
+                document.getElementById('cfg-clockOffsetY').value = 0;
+                document.getElementById('cfg-showSeconds').checked = true;
+                if(document.getElementById('cfg-showProgressBar')) document.getElementById('cfg-showProgressBar').checked = true;
+                updateConfig();
+            }
+        }
+
+        let lastState = null;
+
         const socket = io();
 
         // Audio Cues Logic
@@ -470,16 +727,84 @@
                 monitorLogo.classList.add('hidden');
                 
                 if (s.mode === 'timeofday') { 
-                    monitorTime.innerText = new Date().toLocaleTimeString('en-US', {hour12: false, hour:'2-digit', minute:'2-digit'}); 
+
+
+                    if (!window.modTimeInterval) {
+                        window.modTimeInterval = setInterval(() => {
+                            if (lastState && lastState.mode === 'timeofday') {
+                                const opts = {hour12: false, hour:'2-digit', minute:'2-digit'};
+                                if (lastState.showSeconds) opts.second = '2-digit';
+                                document.getElementById('m-time').innerText = new Date().toLocaleTimeString('en-US', opts);
+                            }
+                        }, 1000);
+                    }
+                    const opts = {hour12: false, hour:'2-digit', minute:'2-digit'};
+                    if (s.showSeconds) opts.second = '2-digit';
+                    monitorTime.innerText = new Date().toLocaleTimeString('en-US', opts);
+
+
                     monitorTime.style.color = '#22c55e';
                 } else {
                     const abs = Math.abs(s.timeLeft);
-                    monitorTime.innerText = (s.timeLeft < 0 ? "-" : "") + Math.floor(abs/60).toString().padStart(2,'0') + ":" + (abs%60).toString().padStart(2,'0');
+
+                    let formattedTime = (s.timeLeft < 0 ? "-" : "") + Math.floor(abs/60).toString().padStart(2,'0');
+                    if (s.showSeconds) formattedTime += ":" + (abs%60).toString().padStart(2,'0');
+                    monitorTime.innerText = formattedTime;
+
+
+
+            // Check if config specifically changed, ignore timeLeft ticks
+            const configChanged = !lastState ||
+                lastState.textColor !== s.textColor || lastState.bgColor !== s.bgColor ||
+                lastState.warnColor !== s.warnColor || lastState.dangerColor !== s.dangerColor ||
+                lastState.warnThreshold !== s.warnThreshold || lastState.dangerThreshold !== s.dangerThreshold ||
+                lastState.fontFamily !== s.fontFamily || lastState.clockScale !== s.clockScale ||
+                lastState.clockOffsetX !== s.clockOffsetX || lastState.clockOffsetY !== s.clockOffsetY ||
+                lastState.showSeconds !== s.showSeconds || lastState.showProgressBar !== s.showProgressBar ||
+                lastState.language !== s.language;
+
+            if (configChanged) {
+                // Update inputs only if value changed to avoid fighting user input
+                if (document.getElementById('cfg-textColor').value !== s.textColor) document.getElementById('cfg-textColor').value = s.textColor || '#22c55e';
+                if (document.getElementById('cfg-bgColor').value !== s.bgColor) document.getElementById('cfg-bgColor').value = s.bgColor || '#000000';
+                if (document.getElementById('cfg-warnColor').value !== s.warnColor) document.getElementById('cfg-warnColor').value = s.warnColor || '#f97316';
+                if (document.getElementById('cfg-dangerColor').value !== s.dangerColor) document.getElementById('cfg-dangerColor').value = s.dangerColor || '#ef4444';
+                if (document.getElementById('cfg-warnThreshold').value != s.warnThreshold) document.getElementById('cfg-warnThreshold').value = s.warnThreshold || 120;
+                if (document.getElementById('cfg-dangerThreshold').value != s.dangerThreshold) document.getElementById('cfg-dangerThreshold').value = s.dangerThreshold || 0;
+                if (document.getElementById('cfg-fontFamily').value !== s.fontFamily) document.getElementById('cfg-fontFamily').value = s.fontFamily || 'JetBrains Mono';
+                if (document.getElementById('cfg-progressColor').value !== s.progressColor) document.getElementById('cfg-progressColor').value = s.progressColor || '#22c55e';
+                if (document.getElementById('cfg-language').value !== s.language) document.getElementById('cfg-language').value = s.language || 'en';
+                if (document.getElementById('cfg-clockScale').value != s.clockScale) document.getElementById('cfg-clockScale').value = s.clockScale || 100;
+                if (document.getElementById('cfg-clockOffsetX').value != s.clockOffsetX) document.getElementById('cfg-clockOffsetX').value = s.clockOffsetX || 0;
+                if (document.getElementById('cfg-clockOffsetY').value != s.clockOffsetY) document.getElementById('cfg-clockOffsetY').value = s.clockOffsetY || 0;
+                document.getElementById('cfg-showSeconds').checked = s.showSeconds !== false;
+                if(document.getElementById('cfg-showProgressBar')) document.getElementById('cfg-showProgressBar').checked = s.showProgressBar !== false;
+
+                document.getElementById('cfg-clockScale-val').innerText = s.clockScale || 100;
+                document.getElementById('cfg-clockOffsetX-val').innerText = s.clockOffsetX || 0;
+                document.getElementById('cfg-clockOffsetY-val').innerText = s.clockOffsetY || 0;
+
+                if (currentLang !== s.language) {
+                    currentLang = s.language || 'en';
+                    updateLangUI();
+                }
+
+                // Apply styles to moderator monitor
+                document.getElementById('m-frame').style.backgroundColor = s.bgColor || '#000000';
+                monitorTime.style.fontFamily = s.fontFamily || 'monospace';
+                const scale = (s.clockScale || 100) / 100;
+                const x = s.clockOffsetX || 0;
+                const y = s.clockOffsetY || 0;
+                monitorTime.style.transform = `translate(${x}%, ${y}%) scale(${scale})`;
+
+                lastState = JSON.parse(JSON.stringify(s));
+            }
+
                     if (s.mode === 'countdown') {
-                        if (s.timeLeft <= 0) monitorTime.style.color = s.blink_state ? '#000000' : '#ef4444';
-                        else if (s.timeLeft <= 120) monitorTime.style.color = '#f97316'; 
-                        else monitorTime.style.color = '#22c55e';
-                    } else monitorTime.style.color = '#22c55e';
+                        if (s.timeLeft <= (s.dangerThreshold || 0)) monitorTime.style.color = s.blink_state ? s.bgColor : (s.dangerColor || '#ef4444');
+                        else if (s.timeLeft <= (s.warnThreshold || 120)) monitorTime.style.color = s.warnColor || '#f97316';
+                        else monitorTime.style.color = s.textColor || '#22c55e';
+                    } else monitorTime.style.color = s.textColor || '#22c55e';
                 }
             }
             

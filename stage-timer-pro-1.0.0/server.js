@@ -68,6 +68,8 @@ try {
 }
 
 // --- APP STATE ---
+const configFile = path.join(__dirname, 'config.json');
+
 let state = {
     timeLeft: 600,
     initialTime: 600,
@@ -78,8 +80,74 @@ let state = {
     ip: netInfo.ip,
     netmask: netInfo.mask,
     logoData: logoData,
-    blink_state: false
+    blink_state: false,
+
+    textColor: '#22c55e',
+    bgColor: '#000000',
+    warnThreshold: 120,
+    warnColor: '#f97316',
+    dangerThreshold: 0,
+    dangerColor: '#ef4444',
+    progressColor: '#22c55e',
+    fontFamily: 'JetBrains Mono',
+    clockOffsetX: 0,
+    clockOffsetY: 0,
+    clockScale: 100,
+    showSeconds: true,
+    showProgressBar: true,
+    language: 'en'
 };
+
+// Load Config
+try {
+    if (fs.existsSync(configFile)) {
+        const parsedConfig = JSON.parse(fs.readFileSync(configFile, 'utf8'));
+        state = { ...state, ...parsedConfig };
+    } else {
+        fs.writeFileSync(configFile, JSON.stringify({
+            textColor: state.textColor,
+            bgColor: state.bgColor,
+            warnThreshold: state.warnThreshold,
+            warnColor: state.warnColor,
+            dangerThreshold: state.dangerThreshold,
+            dangerColor: state.dangerColor,
+            progressColor: state.progressColor,
+            progressColor: state.progressColor,
+            fontFamily: state.fontFamily,
+            clockOffsetX: state.clockOffsetX,
+            clockOffsetY: state.clockOffsetY,
+            clockScale: state.clockScale,
+            showSeconds: state.showSeconds,
+            showProgressBar: state.showProgressBar,
+            language: state.language
+        }));
+    }
+} catch (e) {
+    console.error("Could not load config.json", e);
+}
+
+function saveConfig() {
+    try {
+        fs.writeFileSync(configFile, JSON.stringify({
+            textColor: state.textColor,
+            bgColor: state.bgColor,
+            warnThreshold: state.warnThreshold,
+            warnColor: state.warnColor,
+            dangerThreshold: state.dangerThreshold,
+            dangerColor: state.dangerColor,
+            progressColor: state.progressColor,
+            fontFamily: state.fontFamily,
+            clockOffsetX: state.clockOffsetX,
+            clockOffsetY: state.clockOffsetY,
+            clockScale: state.clockScale,
+            showSeconds: state.showSeconds,
+            showProgressBar: state.showProgressBar,
+            language: state.language
+        }));
+    } catch (e) {
+        console.error("Could not save config.json", e);
+    }
+}
 
 // --- GLOBAL TICK ENGINES ---
 // Standard Timer Tick (1 Second)
@@ -170,6 +238,32 @@ app.get('/api/mode', (req, res) => {
         res.send('Mode updated');
     } else {
         res.status(400).send('Invalid Mode');
+    }
+});
+
+app.post('/api/config/update', (req, res) => {
+    const newConfig = req.body;
+    if (newConfig) {
+        if (newConfig.textColor !== undefined) state.textColor = newConfig.textColor;
+        if (newConfig.bgColor !== undefined) state.bgColor = newConfig.bgColor;
+        if (newConfig.warnThreshold !== undefined) state.warnThreshold = parseInt(newConfig.warnThreshold);
+        if (newConfig.warnColor !== undefined) state.warnColor = newConfig.warnColor;
+        if (newConfig.dangerThreshold !== undefined) state.dangerThreshold = parseInt(newConfig.dangerThreshold);
+        if (newConfig.dangerColor !== undefined) state.dangerColor = newConfig.dangerColor;
+        if (newConfig.progressColor !== undefined) state.progressColor = newConfig.progressColor;
+        if (newConfig.fontFamily !== undefined) state.fontFamily = newConfig.fontFamily;
+        if (newConfig.clockOffsetX !== undefined) state.clockOffsetX = parseInt(newConfig.clockOffsetX);
+        if (newConfig.clockOffsetY !== undefined) state.clockOffsetY = parseInt(newConfig.clockOffsetY);
+        if (newConfig.clockScale !== undefined) state.clockScale = parseInt(newConfig.clockScale);
+        if (newConfig.showSeconds !== undefined) state.showSeconds = newConfig.showSeconds === true || newConfig.showSeconds === 'true';
+        if (newConfig.showProgressBar !== undefined) state.showProgressBar = newConfig.showProgressBar === true || newConfig.showProgressBar === 'true';
+        if (newConfig.language !== undefined) state.language = newConfig.language;
+
+        saveConfig();
+        broadcast();
+        res.send('Config Updated');
+    } else {
+        res.status(400).send('Invalid Config');
     }
 });
 
