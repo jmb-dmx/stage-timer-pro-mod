@@ -115,7 +115,7 @@ class StageTimerInstance extends InstanceBase {
 	initFeedbacks() {
 		this.setFeedbackDefinitions({
 			timer_state: {
-				name: "Auto-Color Timer Button",
+				name: "Auto-Color Timer Button (Bouton Auto-Couleur)",
 				type: "advanced",
 				label: "Timer State Colors",
 				options: [],
@@ -143,7 +143,7 @@ class StageTimerInstance extends InstanceBase {
 				},
 			},
 			msg_state: {
-				name: "Message Active Background",
+				name: "Message Active Background (Fond Msg Actif)",
 				type: "boolean",
 				label: "Message is active on screen",
 				defaultStyle: {
@@ -168,28 +168,28 @@ class StageTimerInstance extends InstanceBase {
 
 		this.setActionDefinitions({
 			toggle_playback: {
-				name: "Toggle Start / Pause",
+				name: "Toggle Start / Pause (Démarrer / Pauser)",
 				options: [],
 				callback: async () => {
 					await sendCmd("toggle_playback");
 				},
 			},
 			start: {
-				name: "Start Timer",
+				name: "Start Timer (Démarrer)",
 				options: [],
 				callback: async () => {
 					await sendCmd("start");
 				},
 			},
 			pause: {
-				name: "Pause Timer",
+				name: "Pause Timer (Pauser)",
 				options: [],
 				callback: async () => {
 					await sendCmd("pause");
 				},
 			},
 			toggle_msg: {
-				name: "Toggle Message On/Off",
+				name: "Toggle Message On/Off (Afficher/Masquer Msg)",
 				options: [],
 				callback: async () => {
 					await sendCmd("message/toggle");
@@ -198,7 +198,7 @@ class StageTimerInstance extends InstanceBase {
 
 			// New Action for Instant Triggering
 			trigger_msg: {
-				name: "Trigger Instant Message by Slot Number",
+				name: "Trigger Instant Message by Slot (Déclencher Msg)",
 				options: [
 					{
 						type: "number",
@@ -216,7 +216,7 @@ class StageTimerInstance extends InstanceBase {
 			},
 
 			reset: {
-				name: "Reset Timer",
+				name: "Reset Timer (Réinitialiser)",
 				options: [
 					{
 						type: "number",
@@ -231,14 +231,14 @@ class StageTimerInstance extends InstanceBase {
 				},
 			},
 			reset_last: {
-				name: "Reset to Last Set Time",
+				name: "Reset to Last Set Time (Réinitialiser au dernier temps)",
 				options: [],
 				callback: async () => {
 					await sendCmd("reset");
 				},
 			},
 			add: {
-				name: "Add/Subtract Time",
+				name: "Add/Subtract Time (Ajouter/Soustraire temps)",
 				options: [
 					{
 						type: "number",
@@ -253,7 +253,7 @@ class StageTimerInstance extends InstanceBase {
 				},
 			},
 			set_mode: {
-				name: "Set Display Mode",
+				name: "Set Display Mode (Changer Mode d'affichage)",
 				options: [
 					{
 						type: "dropdown",
@@ -281,7 +281,7 @@ class StageTimerInstance extends InstanceBase {
 		// --- Smart Controls ---
 		presets["smart_timer"] = {
 			type: "button",
-			category: "Smart Controls",
+			category: "Smart Controls (Contrôles Intelligents)",
 			name: "Smart Timer Button",
 			style: {
 				text: "⏯\\n$(stagetimer:time)",
@@ -328,7 +328,7 @@ class StageTimerInstance extends InstanceBase {
 		for (let i = 1; i <= 8; i++) {
 			presets[`trigger_msg_${i}`] = {
 				type: "button",
-				category: "Live Messages Bank",
+				category: "Live Messages Bank (Banque de Msg)",
 				name: `Trigger Slot ${i}`,
 				style: {
 					text: `[${i}]\\n$(stagetimer:msg_${i})`,
@@ -354,7 +354,7 @@ class StageTimerInstance extends InstanceBase {
 		modes.forEach((mode) => {
 			presets[`mode_${mode.id}`] = {
 				type: "button",
-				category: "Display Modes",
+				category: "Display Modes (Modes d'affichage)",
 				name: mode.label,
 				style: {
 					text: `📺\\n${mode.label}`,
@@ -386,7 +386,7 @@ class StageTimerInstance extends InstanceBase {
 		quickTimes.forEach((t) => {
 			presets[`reset_${t.sec}`] = {
 				type: "button",
-				category: "Quick Times",
+				category: "Quick Times (Temps Rapides)",
 				name: `Reset to ${t.label}`,
 				style: {
 					text: `🔄\\n${t.label}`,
@@ -405,7 +405,7 @@ class StageTimerInstance extends InstanceBase {
 		// --- Manual Transport ---
 		presets["add_min"] = {
 			type: "button",
-			category: "Manual Adjustments",
+			category: "Manual Adjustments (Ajustements Manuels)",
 			name: "+1 Minute",
 			style: {
 				text: "➕\\n+1m",
