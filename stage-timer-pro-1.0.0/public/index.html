@@ -18,12 +18,12 @@
             --green: #16a34a; --amber: #d97706; --red: #dc2626;
         }
         * { box-sizing: border-box; }
-        body { font-family: sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
+        body { font-family: sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 10px 20px; overflow-x: hidden; overflow-y: auto; max-height: 100vh;}
         .container { max-width: 1200px; margin: 0 auto; }
-        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        .grid { display: grid; grid-template-columns: 1fr; gap: 30px; }
-        @media (min-width: 1024px) { .grid { grid-template-columns: 1.5fr 1fr; } }
-        .card { background: var(--card); border: 1px solid var(--border); border-radius: 24px; padding: 25px; }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        @media (min-width: 768px) { .grid { grid-template-columns: 1.5fr 1fr; } }
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 15px; }
         h2 { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: var(--text-dim); margin: 0 0 15px 0; }
         
         .monitor { aspect-ratio: 16/9; background: #000; border-radius: 15px; position: relative; display: flex; align-items: center; justify-content: center; border: 1px solid #000; overflow: hidden; }
@@ -37,16 +37,16 @@
         /* Transport Buttons Base */
         .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .btn { border: none; border-radius: 15px; cursor: pointer; font-weight: 900; padding: 20px; color: #fff; transition: all 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
-        .btn:active { transform: scale(0.95); }
+        .btn:active { opacity: 0.8; }
         
         /* Icon Containers */
         .icon-circle { background: rgba(255,255,255,0.2); padding: 12px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
         .icon-circle svg { width: 32px; height: 32px; }
 
         /* Specific Colors */
-        .btn-start { background: var(--green); height: 160px; box-shadow: 0 10px 20px rgba(22, 163, 74, 0.2); }
-        .btn-pause { background: var(--amber); height: 160px; box-shadow: 0 10px 20px rgba(217, 119, 6, 0.2); }
-        .btn-reset { background: #475569; height: 160px; color: #cbd5e1; }
+        .btn-start { background: var(--green); height: 120px; box-shadow: 0 10px 20px rgba(22, 163, 74, 0.2); }
+        .btn-pause { background: var(--amber); height: 120px; box-shadow: 0 10px 20px rgba(217, 119, 6, 0.2); }
+        .btn-reset { background: #475569; height: 120px; color: #cbd5e1; }
         .btn-blue { background: rgba(37, 99, 235, 0.1); color: #60a5fa; border: 1px solid rgba(37, 99, 235, 0.2); padding: 15px; }
         .btn-dim { background: #334155; color: #94a3b8; padding: 15px; }
 
@@ -334,10 +334,10 @@
                             <span style="font-size: 1.25rem; letter-spacing: 0.1em;">RESET</span>
                         </button>
 
-                        <button onclick="api('add',60)" class="btn btn-blue" style="height: 80px; flex-direction: row; gap: 8px;">
+                        <button onclick="api('add',60)" class="btn btn-blue" style="height: 60px; flex-direction: row; gap: 8px;">
                             <span style="font-size: 20px;">+</span> 1 MIN
                         </button>
-                        <button onclick="api('add',-60)" class="btn btn-dim" style="height: 80px; flex-direction: row; gap: 8px;">
+                        <button onclick="api('add',-60)" class="btn btn-dim" style="height: 60px; flex-direction: row; gap: 8px;">
                             <span style="font-size: 20px;">-</span> 1 MIN
                         </button>
                     </div>
