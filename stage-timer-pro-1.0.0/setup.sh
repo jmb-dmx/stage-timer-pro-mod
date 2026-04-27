@@ -7,15 +7,19 @@ echo "  Stage Timer Pro - Automated Deployment"
 echo "================================================="
 
 # --- CONFIGURATION ---
-REPO_URL="https://github.com/ondrejvysek/stage-timer-pro.git"
+REPO_URL="${1:-https://github.com/ondrejvysek/stage-timer-pro.git}"
 CURRENT_USER=$(whoami)
 APP_DIR="$HOME/stage-timer"
 
 echo -e "\n[1/7] Updating system and installing dependencies..."
 sudo apt update
-sudo apt install -y git nodejs npm chromium xserver-xorg x11-xserver-utils xinit openbox network-manager fonts-dejavu fonts-liberation fonts-roboto plymouth plymouth-themes imagemagick
+sudo apt install -y git nodejs npm chromium xserver-xorg x11-xserver-utils xinit openbox network-manager dnsmasq-base rfkill fonts-dejavu fonts-liberation fonts-roboto plymouth plymouth-themes imagemagick
 
 echo -e "\n[2/7] Configuring Auto-Fallback Wi-Fi Hotspot..."
+# Ensure Wi-Fi radio is unblocked and set to CA (Canada) per user request to allow 5GHz/AP modes
+sudo rfkill unblock wifi
+sudo raspi-config nonint do_wifi_country CA
+sleep 2
 sudo nmcli connection delete "StageTimer_Fallback" 2>/dev/null
 sudo nmcli connection add type wifi ifname wlan0 con-name "StageTimer_Fallback" autoconnect yes ssid StageTimer_AP
 sudo nmcli connection modify "StageTimer_Fallback" 802-11-wireless.mode ap 802-11-wireless.band bg ipv4.method shared
@@ -29,11 +33,29 @@ sudo raspi-config nonint do_boot_behaviour B2
 echo -e "\n[4/7] Setting up user permissions..."
 sudo usermod -a -G video,render,input,tty $CURRENT_USER
 
+# Grant passwordless sudo to the current user so the Node API can run systemctl, nmcli, etc.
+echo "$CURRENT_USER ALL=(ALL) NOPASSWD: ALL" | sudo tee "/etc/sudoers.d/010_stagetimer-nopasswd"
+
 echo -e "\n[5/7] Downloading latest code from Git..."
 if [ -d "$APP_DIR" ]; then
     sudo rm -rf "$APP_DIR"
 fi
 git clone "$REPO_URL" "$APP_DIR"
+
+# Handle repos that clone into a sub-folder (like "stage-timer-pro-1.0.0/")
+if [ ! -f "$APP_DIR/server.js" ] && [ -d "$APP_DIR/stage-timer-pro-1.0.0" ]; then
+    echo "Detected nested folder structure. Adjusting APP_DIR..."
+    APP_DIR="$APP_DIR/stage-timer-pro-1.0.0"
+fi
+# General fallback check for any single nested directory
+if [ ! -f "$APP_DIR/server.js" ]; then
+    NESTED_DIR=$(find "$APP_DIR" -mindepth 1 -maxdepth 1 -type d | head -n 1)
+    if [ -n "$NESTED_DIR" ] && [ -f "$NESTED_DIR/server.js" ]; then
+        echo "Detected nested folder structure ($NESTED_DIR). Adjusting APP_DIR..."
+        APP_DIR="$NESTED_DIR"
+    fi
+fi
+
 cd "$APP_DIR"
 
 echo -e "\n[6/7] Installing Node App Dependencies..."
@@ -120,6 +142,21 @@ sudo systemctl start stage-timer
 
 # Bind the Kiosk launch to the physical HDMI console autologin using X11
 echo '[[ -z $DISPLAY && $XDG_VTNR -eq 1 ]] && exec startx "'$APP_DIR'/start-timer.sh" -- -nocursor' > "$HOME/.bash_profile"
+
+echo -e "\n[8/8] Setting up Bitfocus Companion Streamdeck Module..."
+# Automate companion module installation if companion is installed
+if id "companion" &>/dev/null || [ -d "/opt/companion-module-dev" ]; then
+    echo "Companion Pi detected. Installing custom module..."
+    sudo mkdir -p /opt/companion-module-dev/stage-timer-pro
+    sudo cp -r "$APP_DIR/companion/stage-timer/"* /opt/companion-module-dev/stage-timer-pro/
+    cd /opt/companion-module-dev/stage-timer-pro
+    sudo npm install @companion-module/base@^1.14.1
+    sudo chown -R companion:companion /opt/companion-module-dev/stage-timer-pro 2>/dev/null || true
+    sudo systemctl restart companion 2>/dev/null || true
+    echo "Companion module installed successfully!"
+else
+    echo "Companion not detected on this system. Skipping module installation."
+fi
 
 echo "================================================="
 echo "  Setup Complete! "
