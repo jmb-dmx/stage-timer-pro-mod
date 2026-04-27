@@ -13,9 +13,13 @@ APP_DIR="$HOME/stage-timer"
 
 echo -e "\n[1/7] Updating system and installing dependencies..."
 sudo apt update
-sudo apt install -y git nodejs npm chromium xserver-xorg x11-xserver-utils xinit openbox network-manager fonts-dejavu fonts-liberation fonts-roboto plymouth plymouth-themes imagemagick
+sudo apt install -y git nodejs npm chromium xserver-xorg x11-xserver-utils xinit openbox network-manager dnsmasq-base rfkill fonts-dejavu fonts-liberation fonts-roboto plymouth plymouth-themes imagemagick
 
 echo -e "\n[2/7] Configuring Auto-Fallback Wi-Fi Hotspot..."
+# Ensure Wi-Fi radio is unblocked and set to CA (Canada) per user request to allow 5GHz/AP modes
+sudo rfkill unblock wifi
+sudo raspi-config nonint do_wifi_country CA
+sleep 2
 sudo nmcli connection delete "StageTimer_Fallback" 2>/dev/null
 sudo nmcli connection add type wifi ifname wlan0 con-name "StageTimer_Fallback" autoconnect yes ssid StageTimer_AP
 sudo nmcli connection modify "StageTimer_Fallback" 802-11-wireless.mode ap 802-11-wireless.band bg ipv4.method shared
