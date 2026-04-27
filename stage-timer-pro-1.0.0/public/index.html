@@ -707,8 +707,12 @@
         }
 
         socket.on('stateUpdate', s => {
-            document.getElementById('ip-display').innerText = s.ip;
-            document.getElementById('current-ip-info').innerText = `Current Interface: ${s.ip} (Netmask: ${s.netmask || 'N/A'})`;
+            if (document.getElementById('ip-display')) {
+                document.getElementById('ip-display').innerText = s.ip;
+            }
+            if (document.getElementById('current-ip-info')) {
+                document.getElementById('current-ip-info').innerText = `Current Interface: ${s.ip} (Netmask: ${s.netmask || 'N/A'})`;
+            }
             
             // Audio trigger on exact cross of 0
             if (s.mode === 'countdown' && s.isRunning && s.timeLeft === 0 && lastTimeLeft === 1) {
