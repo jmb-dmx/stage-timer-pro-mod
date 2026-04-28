@@ -84,18 +84,19 @@ let state = {
 
     textColor: '#22c55e',
     bgColor: '#000000',
-    warnThreshold: 120,
+    warnThreshold: 10,
     warnColor: '#f97316',
-    dangerThreshold: 0,
+    dangerThreshold: 5,
     dangerColor: '#ef4444',
     progressColor: '#22c55e',
     fontFamily: 'JetBrains Mono',
     clockOffsetX: 0,
     clockOffsetY: 0,
-    clockScale: 100,
+    clockScale: 90,
     showSeconds: true,
     showProgressBar: true,
-    language: 'en'
+    language: 'en',
+    apAlwaysOn: false
 };
 
 // Load Config
@@ -119,11 +120,19 @@ try {
             clockScale: state.clockScale,
             showSeconds: state.showSeconds,
             showProgressBar: state.showProgressBar,
-            language: state.language
+            language: state.language,
+            apAlwaysOn: state.apAlwaysOn
         }));
     }
 } catch (e) {
     console.error("Could not load config.json", e);
+}
+
+// Ensure AP starts if AlwaysOn is enabled
+if (state.apAlwaysOn) {
+    exec(`sudo nmcli con up StageTimer_Fallback`, (error) => {
+        if (error) console.error("Failed to force AP start:", error);
+    });
 }
 
 function saveConfig() {
@@ -142,7 +151,8 @@ function saveConfig() {
             clockScale: state.clockScale,
             showSeconds: state.showSeconds,
             showProgressBar: state.showProgressBar,
-            language: state.language
+            language: state.language,
+            apAlwaysOn: state.apAlwaysOn
         }));
     } catch (e) {
         console.error("Could not save config.json", e);
@@ -258,6 +268,11 @@ app.post('/api/config/update', (req, res) => {
         if (newConfig.showSeconds !== undefined) state.showSeconds = newConfig.showSeconds === true || newConfig.showSeconds === 'true';
         if (newConfig.showProgressBar !== undefined) state.showProgressBar = newConfig.showProgressBar === true || newConfig.showProgressBar === 'true';
         if (newConfig.language !== undefined) state.language = newConfig.language;
+        if (newConfig.apAlwaysOn !== undefined) {
+            state.apAlwaysOn = newConfig.apAlwaysOn === true || newConfig.apAlwaysOn === 'true';
+            const action = state.apAlwaysOn ? 'up' : 'down';
+            exec(`sudo nmcli con ${action} StageTimer_Fallback`);
+        }
 
         saveConfig();
         broadcast();
