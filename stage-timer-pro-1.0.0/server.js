@@ -323,7 +323,7 @@ app.get('/api/system/restart', (req, res) => {
 
 app.get('/api/system/update', (req, res) => {
     res.send('Pulling Firmware and System Updates (This may take a few minutes)...');
-    const updateCmd = 'git fetch --all && git reset --hard origin/main && npm install && sudo systemctl restart stage-timer';
+    const updateCmd = 'git fetch --all && git reset --hard origin/$(git rev-parse --abbrev-ref HEAD) && npm install && sudo systemctl restart stage-timer';
     exec(updateCmd, { cwd: __dirname }, (error) => {
         if (error) console.error(`Update error: ${error}`);
     });
@@ -346,7 +346,7 @@ app.get('/api/system/ap', (req, res) => {
 });
 
 app.get('/api/system/ap/status', (req, res) => {
-    exec('nmcli -t -f NAME con show --active', (error, stdout) => {
+    exec('sudo nmcli -t -f NAME con show --active', (error, stdout) => {
         if (error) return res.json({ active: false });
         const isActive = stdout.includes('StageTimer_Fallback');
         res.json({ active: isActive });
@@ -354,12 +354,15 @@ app.get('/api/system/ap/status', (req, res) => {
 });
 
 app.get('/api/system/wifi/scan', (req, res) => {
-    exec('sudo nmcli -t -f SSID,SIGNAL dev wifi list', (error, stdout) => {
+    exec('sudo nmcli dev wifi rescan && sudo nmcli -t -f SSID,SIGNAL dev wifi list', (error, stdout) => {
         if (error) return res.status(500).json([]);
         const networks = [];
         const seen = new Set();
         stdout.split('\n').forEach(line => {
-            const [ssid, signal] = line.split(':');
+            const splitIdx = line.lastIndexOf(':');
+            if (splitIdx === -1) return;
+            const ssid = line.substring(0, splitIdx);
+            const signal = line.substring(splitIdx + 1);
             if (ssid && ssid.trim() !== '' && !seen.has(ssid)) {
                 seen.add(ssid);
                 networks.push({ ssid, signal });
