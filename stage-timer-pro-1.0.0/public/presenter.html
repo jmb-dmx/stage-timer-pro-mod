@@ -130,9 +130,9 @@
 
             clock.style.fontFamily = state.fontFamily !== undefined ? state.fontFamily : "'JetBrains Mono', monospace";
 
-            const scale = (state.clockScale || 90) / 100;
-            const offsetX = state.clockOffsetX || 0;
-            const offsetY = state.clockOffsetY || 0;
+            const scale = (state.clockScale !== undefined ? state.clockScale : 90) / 100;
+            const offsetX = state.clockOffsetX !== undefined ? state.clockOffsetX : 0;
+            const offsetY = state.clockOffsetY !== undefined ? state.clockOffsetY : 0;
             clock.style.transform = `translate(${offsetX}vw, ${offsetY}vh) scale(${scale})`;
 
             // Re-apply blink colors logic just in case it's blinking
@@ -207,10 +207,10 @@
                 clock.style.fontSize = fontSizeVw + "vw";
 
                 if (state.mode === 'countdown') {
-                    if (state.timeLeft <= (state.dangerThreshold || 5)) {
+                    if (state.timeLeft <= (state.dangerThreshold !== undefined ? state.dangerThreshold : 5)) {
                         document.body.classList.add('state-danger');
                         document.body.style.backgroundColor = 'var(--danger)';
-                    } else if (state.timeLeft <= (state.warnThreshold || 10)) {
+                    } else if (state.timeLeft <= (state.warnThreshold !== undefined ? state.warnThreshold : 10)) {
                         document.body.classList.add('state-warn');
                         document.body.style.backgroundColor = 'var(--warn)';
                     }

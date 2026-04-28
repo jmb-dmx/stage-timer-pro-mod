@@ -788,21 +788,21 @@
                 if (document.getElementById('cfg-bgColor').value !== s.bgColor) document.getElementById('cfg-bgColor').value = s.bgColor || '#000000';
                 if (document.getElementById('cfg-warnColor').value !== s.warnColor) document.getElementById('cfg-warnColor').value = s.warnColor || '#f97316';
                 if (document.getElementById('cfg-dangerColor').value !== s.dangerColor) document.getElementById('cfg-dangerColor').value = s.dangerColor || '#ef4444';
-                if (document.getElementById('cfg-warnThreshold').value != s.warnThreshold) document.getElementById('cfg-warnThreshold').value = s.warnThreshold || 10;
-                if (document.getElementById('cfg-dangerThreshold').value != s.dangerThreshold) document.getElementById('cfg-dangerThreshold').value = s.dangerThreshold || 5;
-                if (document.getElementById('cfg-fontFamily').value !== s.fontFamily) document.getElementById('cfg-fontFamily').value = s.fontFamily || 'JetBrains Mono';
-                if (document.getElementById('cfg-progressColor').value !== s.progressColor) document.getElementById('cfg-progressColor').value = s.progressColor || '#22c55e';
-                if (document.getElementById('cfg-language').value !== s.language) document.getElementById('cfg-language').value = s.language || 'en';
-                if (document.getElementById('cfg-clockScale').value != s.clockScale) document.getElementById('cfg-clockScale').value = s.clockScale || 90;
-                if (document.getElementById('cfg-clockOffsetX').value != s.clockOffsetX) document.getElementById('cfg-clockOffsetX').value = s.clockOffsetX || 0;
-                if (document.getElementById('cfg-clockOffsetY').value != s.clockOffsetY) document.getElementById('cfg-clockOffsetY').value = s.clockOffsetY || 0;
+                if (document.getElementById('cfg-warnThreshold').value != s.warnThreshold) document.getElementById('cfg-warnThreshold').value = s.warnThreshold !== undefined ? s.warnThreshold : 10;
+                if (document.getElementById('cfg-dangerThreshold').value != s.dangerThreshold) document.getElementById('cfg-dangerThreshold').value = s.dangerThreshold !== undefined ? s.dangerThreshold : 5;
+                if (document.getElementById('cfg-fontFamily').value !== s.fontFamily) document.getElementById('cfg-fontFamily').value = s.fontFamily !== undefined ? s.fontFamily : 'JetBrains Mono';
+                if (document.getElementById('cfg-progressColor').value !== s.progressColor) document.getElementById('cfg-progressColor').value = s.progressColor !== undefined ? s.progressColor : '#22c55e';
+                if (document.getElementById('cfg-language').value !== s.language) document.getElementById('cfg-language').value = s.language !== undefined ? s.language : 'en';
+                if (document.getElementById('cfg-clockScale').value != s.clockScale) document.getElementById('cfg-clockScale').value = s.clockScale !== undefined ? s.clockScale : 90;
+                if (document.getElementById('cfg-clockOffsetX').value != s.clockOffsetX) document.getElementById('cfg-clockOffsetX').value = s.clockOffsetX !== undefined ? s.clockOffsetX : 0;
+                if (document.getElementById('cfg-clockOffsetY').value != s.clockOffsetY) document.getElementById('cfg-clockOffsetY').value = s.clockOffsetY !== undefined ? s.clockOffsetY : 0;
                 document.getElementById('cfg-showSeconds').checked = s.showSeconds !== false;
                 if(document.getElementById('cfg-showProgressBar')) document.getElementById('cfg-showProgressBar').checked = s.showProgressBar !== false;
                 if(document.getElementById('cfg-apAlwaysOn')) document.getElementById('cfg-apAlwaysOn').checked = s.apAlwaysOn === true;
 
-                document.getElementById('cfg-clockScale-val').innerText = s.clockScale || 90;
-                document.getElementById('cfg-clockOffsetX-val').innerText = s.clockOffsetX || 0;
-                document.getElementById('cfg-clockOffsetY-val').innerText = s.clockOffsetY || 0;
+                document.getElementById('cfg-clockScale-val').innerText = s.clockScale !== undefined ? s.clockScale : 90;
+                document.getElementById('cfg-clockOffsetX-val').innerText = s.clockOffsetX !== undefined ? s.clockOffsetX : 0;
+                document.getElementById('cfg-clockOffsetY-val').innerText = s.clockOffsetY !== undefined ? s.clockOffsetY : 0;
 
                 if (currentLang !== s.language) {
                     currentLang = s.language !== undefined ? s.language : 'en';
@@ -810,11 +810,11 @@
                 }
 
                 // Apply styles to moderator monitor
-                document.getElementById('m-frame').style.backgroundColor = s.bgColor || '#000000';
-                monitorTime.style.fontFamily = s.fontFamily || 'monospace';
-                const scale = (s.clockScale || 90) / 100;
-                const x = s.clockOffsetX || 0;
-                const y = s.clockOffsetY || 0;
+                document.getElementById('m-frame').style.backgroundColor = s.bgColor !== undefined ? s.bgColor : '#000000';
+                monitorTime.style.fontFamily = s.fontFamily !== undefined ? s.fontFamily : 'monospace';
+                const scale = (s.clockScale !== undefined ? s.clockScale : 90) / 100;
+                const x = s.clockOffsetX !== undefined ? s.clockOffsetX : 0;
+                const y = s.clockOffsetY !== undefined ? s.clockOffsetY : 0;
                 monitorTime.style.transform = `translate(${x}%, ${y}%) scale(${scale})`;
 
                 lastState = JSON.parse(JSON.stringify(s));
