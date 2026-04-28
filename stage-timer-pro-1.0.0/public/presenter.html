@@ -128,7 +128,7 @@
             document.body.style.backgroundColor = 'var(--bg)';
             document.body.style.color = 'var(--text)';
 
-            clock.style.fontFamily = state.fontFamily || "'JetBrains Mono', monospace";
+            clock.style.fontFamily = state.fontFamily !== undefined ? state.fontFamily : "'JetBrains Mono', monospace";
 
             const scale = (state.clockScale || 90) / 100;
             const offsetX = state.clockOffsetX || 0;

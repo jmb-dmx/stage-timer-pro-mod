@@ -805,7 +805,7 @@
                 document.getElementById('cfg-clockOffsetY-val').innerText = s.clockOffsetY || 0;
 
                 if (currentLang !== s.language) {
-                    currentLang = s.language || 'en';
+                    currentLang = s.language !== undefined ? s.language : 'en';
                     updateLangUI();
                 }
 
