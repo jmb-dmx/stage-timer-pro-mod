@@ -225,6 +225,10 @@
                     <h3 style="margin: 0;" data-i18n="ap_fallback">Access Point (Fallback)</h3>
                     <span id="ap-status-badge" class="msg-status-badge status-off" style="float: none; position: static;">CHECKING...</span>
                 </div>
+                <div class="sys-row" style="margin-bottom: 15px;">
+                    <span class="config-label" data-i18n="ap_always_on" style="flex: 1;">Always On AP</span>
+                    <input type="checkbox" id="cfg-apAlwaysOn" onchange="updateConfig()">
+                </div>
                 <div class="sys-row">
                     <button onclick="toggleAP('on')" class="sys-btn" style="flex:1; background: var(--green);" data-i18n="ap_on">TURN ON AP</button>
                     <button onclick="toggleAP('down')" class="sys-btn sys-btn-danger" style="flex:1;" data-i18n="ap_off">TURN OFF AP</button>
@@ -417,7 +421,7 @@
                 clock_scale: "Clock Scale (%)",
                 clock_offset_x: "Clock Offset X (%)",
                 clock_offset_y: "Clock Offset Y (%)",
-                show_seconds: "Show Seconds", language: "Language", progress_color: "Progress Bar Color", wifi_conn: "Wi-Fi Connection", scan_net: "SCAN NETWORKS", wifi_pass: "Password (if needed)", connect: "CONNECT", static_ip: "Static IP (For Current Wi-Fi)", ip_addr: "IP (192.168.1.50)", gateway: "Gateway (192.168.1.1)", apply_static: "APPLY STATIC", revert_dhcp: "REVERT TO DHCP", ap_fallback: "Access Point (Fallback)", ap_on: "TURN ON AP", ap_off: "TURN OFF AP", sys_mgmt: "System Management", new_host: "New Hostname", set_btn: "SET", update_firmware: "PULL FIRMWARE UPDATE (GIT)", cancel: "CANCEL", set_mins: "MM:SS...", enter_msg: "Enter custom message...", reset_defaults: "Reset to Defaults", show_progress: "Show Progress Bar"
+                show_seconds: "Show Seconds", language: "Language", progress_color: "Progress Bar Color", wifi_conn: "Wi-Fi Connection", scan_net: "SCAN NETWORKS", wifi_pass: "Password (if needed)", connect: "CONNECT", static_ip: "Static IP (For Current Wi-Fi)", ip_addr: "IP (192.168.1.50)", gateway: "Gateway (192.168.1.1)", apply_static: "APPLY STATIC", revert_dhcp: "REVERT TO DHCP", ap_fallback: "Access Point (Fallback)", ap_always_on: "Always On AP", ap_on: "TURN ON AP", ap_off: "TURN OFF AP", sys_mgmt: "System Management", new_host: "New Hostname", set_btn: "SET", update_firmware: "PULL FIRMWARE UPDATE (GIT)", cancel: "CANCEL", set_mins: "MM:SS...", enter_msg: "Enter custom message...", reset_defaults: "Reset to Defaults", show_progress: "Show Progress Bar"
             },
             fr: {
                 moderator: "Modérateur",
@@ -461,7 +465,7 @@
                 clock_scale: "Taille de l'Horloge (%)",
                 clock_offset_x: "Décalage Horloge X (%)",
                 clock_offset_y: "Décalage Horloge Y (%)",
-                show_seconds: "Afficher Secondes", language: "Langue", progress_color: "Couleur de la barre de progression", wifi_conn: "Connexion Wi-Fi", scan_net: "SCANNER RÉSEAUX", wifi_pass: "Mot de passe", connect: "CONNECTER", static_ip: "IP Statique", ip_addr: "IP (192.168.1.50)", gateway: "Passerelle (192.168.1.1)", apply_static: "APPLIQUER STATIQUE", revert_dhcp: "RETOURNER AU DHCP", ap_fallback: "Point d'Accès (Secours)", ap_on: "ACTIVER PA", ap_off: "DÉSACTIVER PA", sys_mgmt: "Gestion Système", new_host: "Nouveau Nom d'hôte", set_btn: "DÉFINIR", update_firmware: "METTRE À JOUR LE SYSTÈME (GIT)", cancel: "ANNULER", set_mins: "MM:SS...", enter_msg: "Message personnalisé...", reset_defaults: "Réinitialiser", show_progress: "Afficher barre de progression"
+                show_seconds: "Afficher Secondes", language: "Langue", progress_color: "Couleur de la barre de progression", wifi_conn: "Connexion Wi-Fi", scan_net: "SCANNER RÉSEAUX", wifi_pass: "Mot de passe", connect: "CONNECTER", static_ip: "IP Statique", ip_addr: "IP (192.168.1.50)", gateway: "Passerelle (192.168.1.1)", apply_static: "APPLIQUER STATIQUE", revert_dhcp: "RETOURNER AU DHCP", ap_fallback: "Point d'Accès (Secours)", ap_always_on: "Point d'accès Toujours Activé", ap_on: "ACTIVER PA", ap_off: "DÉSACTIVER PA", sys_mgmt: "Gestion Système", new_host: "Nouveau Nom d'hôte", set_btn: "DÉFINIR", update_firmware: "METTRE À JOUR LE SYSTÈME (GIT)", cancel: "ANNULER", set_mins: "MM:SS...", enter_msg: "Message personnalisé...", reset_defaults: "Réinitialiser", show_progress: "Afficher barre de progression"
             }
         };
 
@@ -510,7 +514,8 @@
                 showSeconds: document.getElementById('cfg-showSeconds').checked,
                 showProgressBar: document.getElementById('cfg-showProgressBar').checked,
                 progressColor: document.getElementById('cfg-progressColor').value,
-                language: document.getElementById('cfg-language').value
+                language: document.getElementById('cfg-language').value,
+                apAlwaysOn: document.getElementById('cfg-apAlwaysOn').checked
             };
 
             document.getElementById('cfg-clockScale-val').innerText = config.clockScale;
@@ -531,14 +536,15 @@
                 document.getElementById('cfg-warnColor').value = '#f97316';
                 document.getElementById('cfg-dangerColor').value = '#ef4444';
                 document.getElementById('cfg-progressColor').value = '#22c55e';
-                document.getElementById('cfg-warnThreshold').value = 120;
-                document.getElementById('cfg-dangerThreshold').value = 0;
+                document.getElementById('cfg-warnThreshold').value = 10;
+                document.getElementById('cfg-dangerThreshold').value = 5;
                 document.getElementById('cfg-fontFamily').value = 'JetBrains Mono';
-                document.getElementById('cfg-clockScale').value = 100;
+                document.getElementById('cfg-clockScale').value = 90;
                 document.getElementById('cfg-clockOffsetX').value = 0;
                 document.getElementById('cfg-clockOffsetY').value = 0;
                 document.getElementById('cfg-showSeconds').checked = true;
                 if(document.getElementById('cfg-showProgressBar')) document.getElementById('cfg-showProgressBar').checked = true;
+                if(document.getElementById('cfg-apAlwaysOn')) document.getElementById('cfg-apAlwaysOn').checked = false;
                 updateConfig();
             }
         }
@@ -792,6 +798,7 @@
                 if (document.getElementById('cfg-clockOffsetY').value != s.clockOffsetY) document.getElementById('cfg-clockOffsetY').value = s.clockOffsetY || 0;
                 document.getElementById('cfg-showSeconds').checked = s.showSeconds !== false;
                 if(document.getElementById('cfg-showProgressBar')) document.getElementById('cfg-showProgressBar').checked = s.showProgressBar !== false;
+                if(document.getElementById('cfg-apAlwaysOn')) document.getElementById('cfg-apAlwaysOn').checked = s.apAlwaysOn === true;
 
                 document.getElementById('cfg-clockScale-val').innerText = s.clockScale || 100;
                 document.getElementById('cfg-clockOffsetX-val').innerText = s.clockOffsetX || 0;
