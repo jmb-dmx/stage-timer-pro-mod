@@ -788,19 +788,19 @@
                 if (document.getElementById('cfg-bgColor').value !== s.bgColor) document.getElementById('cfg-bgColor').value = s.bgColor || '#000000';
                 if (document.getElementById('cfg-warnColor').value !== s.warnColor) document.getElementById('cfg-warnColor').value = s.warnColor || '#f97316';
                 if (document.getElementById('cfg-dangerColor').value !== s.dangerColor) document.getElementById('cfg-dangerColor').value = s.dangerColor || '#ef4444';
-                if (document.getElementById('cfg-warnThreshold').value != s.warnThreshold) document.getElementById('cfg-warnThreshold').value = s.warnThreshold || 120;
-                if (document.getElementById('cfg-dangerThreshold').value != s.dangerThreshold) document.getElementById('cfg-dangerThreshold').value = s.dangerThreshold || 0;
+                if (document.getElementById('cfg-warnThreshold').value != s.warnThreshold) document.getElementById('cfg-warnThreshold').value = s.warnThreshold || 10;
+                if (document.getElementById('cfg-dangerThreshold').value != s.dangerThreshold) document.getElementById('cfg-dangerThreshold').value = s.dangerThreshold || 5;
                 if (document.getElementById('cfg-fontFamily').value !== s.fontFamily) document.getElementById('cfg-fontFamily').value = s.fontFamily || 'JetBrains Mono';
                 if (document.getElementById('cfg-progressColor').value !== s.progressColor) document.getElementById('cfg-progressColor').value = s.progressColor || '#22c55e';
                 if (document.getElementById('cfg-language').value !== s.language) document.getElementById('cfg-language').value = s.language || 'en';
-                if (document.getElementById('cfg-clockScale').value != s.clockScale) document.getElementById('cfg-clockScale').value = s.clockScale || 100;
+                if (document.getElementById('cfg-clockScale').value != s.clockScale) document.getElementById('cfg-clockScale').value = s.clockScale || 90;
                 if (document.getElementById('cfg-clockOffsetX').value != s.clockOffsetX) document.getElementById('cfg-clockOffsetX').value = s.clockOffsetX || 0;
                 if (document.getElementById('cfg-clockOffsetY').value != s.clockOffsetY) document.getElementById('cfg-clockOffsetY').value = s.clockOffsetY || 0;
                 document.getElementById('cfg-showSeconds').checked = s.showSeconds !== false;
                 if(document.getElementById('cfg-showProgressBar')) document.getElementById('cfg-showProgressBar').checked = s.showProgressBar !== false;
                 if(document.getElementById('cfg-apAlwaysOn')) document.getElementById('cfg-apAlwaysOn').checked = s.apAlwaysOn === true;
 
-                document.getElementById('cfg-clockScale-val').innerText = s.clockScale || 100;
+                document.getElementById('cfg-clockScale-val').innerText = s.clockScale || 90;
                 document.getElementById('cfg-clockOffsetX-val').innerText = s.clockOffsetX || 0;
                 document.getElementById('cfg-clockOffsetY-val').innerText = s.clockOffsetY || 0;
 
@@ -812,7 +812,7 @@
                 // Apply styles to moderator monitor
                 document.getElementById('m-frame').style.backgroundColor = s.bgColor || '#000000';
                 monitorTime.style.fontFamily = s.fontFamily || 'monospace';
-                const scale = (s.clockScale || 100) / 100;
+                const scale = (s.clockScale || 90) / 100;
                 const x = s.clockOffsetX || 0;
                 const y = s.clockOffsetY || 0;
                 monitorTime.style.transform = `translate(${x}%, ${y}%) scale(${scale})`;
@@ -821,8 +821,8 @@
             }
 
                     if (s.mode === 'countdown') {
-                        if (s.timeLeft <= (s.dangerThreshold || 0)) monitorTime.style.color = s.blink_state ? s.bgColor : (s.dangerColor || '#ef4444');
-                        else if (s.timeLeft <= (s.warnThreshold || 120)) monitorTime.style.color = s.warnColor || '#f97316';
+                        if (s.timeLeft <= (s.dangerThreshold || 5)) monitorTime.style.color = s.blink_state ? s.bgColor : (s.dangerColor || '#ef4444');
+                        else if (s.timeLeft <= (s.warnThreshold || 10)) monitorTime.style.color = s.warnColor || '#f97316';
                         else monitorTime.style.color = s.textColor || '#22c55e';
                     } else monitorTime.style.color = s.textColor || '#22c55e';
                 }

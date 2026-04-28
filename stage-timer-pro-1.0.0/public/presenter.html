@@ -130,7 +130,7 @@
 
             clock.style.fontFamily = state.fontFamily || "'JetBrains Mono', monospace";
 
-            const scale = (state.clockScale || 100) / 100;
+            const scale = (state.clockScale || 90) / 100;
             const offsetX = state.clockOffsetX || 0;
             const offsetY = state.clockOffsetY || 0;
             clock.style.transform = `translate(${offsetX}vw, ${offsetY}vh) scale(${scale})`;
@@ -207,10 +207,10 @@
                 clock.style.fontSize = fontSizeVw + "vw";
 
                 if (state.mode === 'countdown') {
-                    if (state.timeLeft <= (state.dangerThreshold || 0)) {
+                    if (state.timeLeft <= (state.dangerThreshold || 5)) {
                         document.body.classList.add('state-danger');
                         document.body.style.backgroundColor = 'var(--danger)';
-                    } else if (state.timeLeft <= (state.warnThreshold || 120)) {
+                    } else if (state.timeLeft <= (state.warnThreshold || 10)) {
                         document.body.classList.add('state-warn');
                         document.body.style.backgroundColor = 'var(--warn)';
                     }

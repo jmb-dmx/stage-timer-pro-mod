@@ -269,9 +269,12 @@ app.post('/api/config/update', (req, res) => {
         if (newConfig.showProgressBar !== undefined) state.showProgressBar = newConfig.showProgressBar === true || newConfig.showProgressBar === 'true';
         if (newConfig.language !== undefined) state.language = newConfig.language;
         if (newConfig.apAlwaysOn !== undefined) {
-            state.apAlwaysOn = newConfig.apAlwaysOn === true || newConfig.apAlwaysOn === 'true';
-            const action = state.apAlwaysOn ? 'up' : 'down';
-            exec(`sudo nmcli con ${action} StageTimer_Fallback`);
+            const newValue = newConfig.apAlwaysOn === true || newConfig.apAlwaysOn === 'true';
+            if (state.apAlwaysOn !== newValue) {
+                state.apAlwaysOn = newValue;
+                const action = state.apAlwaysOn ? 'up' : 'down';
+                exec(`sudo nmcli con ${action} StageTimer_Fallback`);
+            }
         }
 
         saveConfig();
@@ -369,8 +372,8 @@ app.get('/api/system/ap/status', (req, res) => {
 });
 
 app.get('/api/system/wifi/scan', (req, res) => {
-    exec('sudo nmcli dev wifi rescan && sudo nmcli -t -f SSID,SIGNAL dev wifi list', (error, stdout) => {
-        if (error) return res.status(500).json([]);
+    exec('sudo nmcli dev wifi rescan ; sudo nmcli -t -f SSID,SIGNAL dev wifi list', (error, stdout) => {
+        if (error && !stdout) return res.status(500).json([]);
         const networks = [];
         const seen = new Set();
         stdout.split('\n').forEach(line => {
